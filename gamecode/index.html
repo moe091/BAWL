@@ -6,9 +6,12 @@
         <title>hello phaser!</title>
         <script src="phaser.js"></script>
         <script src="js/states/preload.js"></script>
+        <script src="js/states/play.js"></script>
+        
         <script src="js/objects/char.js"></script>
         <script src="js/objects/gameworld.js"></script>
         <script src="js/objects/player.js"></script>
+        
         <script src="js/components/MovePath.js"></script>
         
         
@@ -20,7 +23,8 @@
             window.onload = function() {
                 game = new Phaser.Game(1200, 900, Phaser.AUTO, 'gameDiv');
                 
-                game.state.add('load', BAWL.Load);
+                game.state.add('load', BAWL.load);
+                game.state.add('play', BAWL.play);
                 
                 game.state.start('load');
             };

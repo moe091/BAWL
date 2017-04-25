@@ -1,0 +1,31 @@
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello phaser!</title>
+        <script src="phaser.js"></script>
+        <script src="js/states/preload.js"></script>
+        <script src="js/objects/char.js"></script>
+        <script src="js/objects/gameworld.js"></script>
+        <script src="js/objects/player.js"></script>
+        
+        
+        
+    </head>
+    <body>
+
+    <script type="text/javascript">
+            window.onload = function() {
+                game = new Phaser.Game(1200, 900, Phaser.AUTO, 'gameDiv');
+                
+                game.state.add('load', BAWL.Load);
+                
+                game.state.start('load');
+            };
+
+    </script>
+
+        <div id="gameDiv"></div>
+    </body>
+</html>

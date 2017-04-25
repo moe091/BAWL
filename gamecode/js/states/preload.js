@@ -1,7 +1,6 @@
 BAWL = {}
 BAWL.Load = {
     preload: function() {
-        game.load.image('logo', 'phaser-ce/phaser-logo-small.png');
         this.loadChar();
         game.load.tilemap('testmap', '../../maps/testmap.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('hyp1', '../../maps/hyp1.png');
@@ -12,36 +11,52 @@ BAWL.Load = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         this.loadMap();
-        var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-        logo.anchor.setTo(0.5, 0.5);
         
         BAWL.player = new BAWL.Player('char1', 1500, 1800);
         game.camera.follow(BAWL.player.head);
-        
+        game.time.advancedTiming = true
         cursors = game.input.keyboard.createCursorKeys();
+        wasd = {
+          up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+          down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+          left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+          right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+        };
+        
         game.physics.enable(BAWL.player.head, Phaser.Physics.ARCADE);
     },
     update: function() {
-       // BAWL.player.head.x+= 1;
         BAWL.player.setZeroVelocity();
 
-        if (cursors.up.isDown)
+        if (wasd.up.isDown)
         {
-            BAWL.player.moveUp(300);
+            BAWL.player.moveUp(450);
             //BAWL.player.head.body.velocity = new Phaser.Point(0, -300);
         }
-        else if (cursors.down.isDown)
+        else if (wasd.down.isDown)
         {
-            BAWL.player.moveDown(300);
+            BAWL.player.moveDown(450);
         }
 
-        if (cursors.left.isDown)
+        if (wasd.left.isDown)
         {
-            BAWL.player.moveLeft(300);
+            if (wasd.up.isDown) {
+                BAWL.player.moveUpLeft(450);
+            } else if (wasd.down.isDown) {
+                BAWL.player.moveDownLeft(450);
+            } else {
+                BAWL.player.moveLeft(450);
+            }
         }
-        else if (cursors.right.isDown)
+        else if (wasd.right.isDown)
         {
-            BAWL.player.moveRight(300);
+            if (wasd.up.isDown) {
+                BAWL.player.moveUpRight(450);
+            } else if (wasd.down.isDown) {
+                BAWL.player.moveDownRight(450);
+            } else {
+                BAWL.player.moveRight(450);
+            }
         } else {
             BAWL.player.head.body.angularVelocity = 0;
         }

@@ -3,12 +3,12 @@ BAWL.Player = function(assetName, x, y) {
     
     this.lFoot = game.add.sprite(x - 9, y - 16, assetName + '_foot');
     this.lFoot.anchor.setTo(0.5);
-    this.lFoot.offset = new Phaser.Point(-6, -11);
+    this.lFoot.offset = new Phaser.Point(-6, 0);
     this.sprites.push(this.lFoot);
     
     this.rFoot = game.add.sprite(x + 9, y + 19, assetName + '_foot');
     this.rFoot.anchor.setTo(0.5);
-    this.rFoot.offset = new Phaser.Point(6, 13);
+    this.rFoot.offset = new Phaser.Point(6, 0);
     this.rFoot.scale.x = -1;
     this.sprites.push(this.rFoot);
     
@@ -30,17 +30,17 @@ BAWL.Player = function(assetName, x, y) {
     
     this.lHand = game.add.sprite(x - 45, y - 14, assetName + '_hand');
     this.lHand.anchor.setTo(0.5);
-    this.lHand.offset = new Phaser.Point(-35, -9);
-    this.lHand.rotation = Math.PI * -0.25;
+    this.lHand.offset = new Phaser.Point(-38, -9);
+    this.lHand.offset.rotation = -Math.PI / 4;
     this.lHand.scale.setTo(1.4);
     this.sprites.push(this.lHand);
     
     this.rHand = game.add.sprite(x + 45, y - 14, assetName + '_hand');
     this.rHand.anchor.setTo(0.5);
-    this.rHand.offset = new Phaser.Point(35, -9);
+    this.rHand.offset = new Phaser.Point(38, -9);
+    this.rHand.offset.rotation = Math.PI / 4;
     this.rHand.scale.x = -1.4;
     this.rHand.scale.y = 1.4;
-    this.rHand.rotation = Math.PI * 0.25;
     this.sprites.push(this.rHand);
     
     this.lElbow = game.add.sprite(x - 35, y - 10, assetName + '_elbow');
@@ -59,11 +59,13 @@ BAWL.Player = function(assetName, x, y) {
     this.head.offset = new Phaser.Point(0, 0);
     this.head.scale.setTo(0.55, 0.55);
     game.physics.arcade.enable(this.head);
-    console.log(this.head);
     this.head.body.velocity = 0;
     for (var i = 0; i < this.sprites.length; i++) {
         this.sprites[i].scale.x*= 0.55;
         this.sprites[i].scale.y*= 0.55;
+        if (this.sprites[i].offset.rotation == null)
+            this.sprites[i].offset.rotation = 0;
+        game.physics.arcade.enable(this.sprites[i]);
     }
    
     //if collision breaks, use this for body.velocity
@@ -72,11 +74,72 @@ BAWL.Player = function(assetName, x, y) {
     this.setupAni();
 }
 
+//Eventually load these from json file
 BAWL.Player.prototype.setupAni = function() {
+
+    
+    this.bod.movement = new BAWL.MovePath(this.head, this.bod);
+    this.bod.movement.addPos(0, 3, 300, -Math.PI / 16);
+    this.bod.movement.addPos(0, 3, 600, Math.PI / 16);
+    this.bod.movement.addPos(0, 3, 300, 0);
+    this.bod.movement.start();
+    
+    this.rShoulder.movement = new BAWL.MovePath(this.head, this.rShoulder);
+    this.rShoulder.movement.addPos(17, -4, 300, -Math.PI / 32);
+    this.rShoulder.movement.addPos(18, 0, 300, 0);
+    this.rShoulder.movement.addPos(17, 4, 300, -Math.PI / 32);
+    this.rShoulder.movement.addPos(18, 0, 300, 0);
+    this.rShoulder.movement.start();
+    
+    this.lShoulder.movement = new BAWL.MovePath(this.head, this.lShoulder);
+    this.lShoulder.movement.addPos(-17, 4, 300, -Math.PI / 32);
+    this.lShoulder.movement.addPos(-18, 0, 300, 0);
+    this.lShoulder.movement.addPos(-17, -4, 300, -Math.PI / 32);
+    this.lShoulder.movement.addPos(-18, 0, 300, 0);
+    this.lShoulder.movement.start();
+    
+    this.lElbow.movement = new BAWL.MovePath(this.head, this.lElbow);
+    this.lElbow.movement.addPos(-25, 3, 300);
+    this.lElbow.movement.addPos(-27, -2, 300);
+    this.lElbow.movement.addPos(-25, -5, 300);
+    this.lElbow.movement.addPos(-27, -2, 300);
+    this.lElbow.movement.start();
+    
+    this.rElbow.movement = new BAWL.MovePath(this.head, this.rElbow);
+    this.rElbow.movement.addPos(25, -6, 300);
+    this.rElbow.movement.addPos(27, -2, 300);
+    this.rElbow.movement.addPos(25, 2, 300);
+    this.rElbow.movement.addPos(27, -2, 300);
+    this.rElbow.movement.start();
+    
     this.lHand.movement = new BAWL.MovePath(this.head, this.lHand);
-    this.lHand.movement.addPos(-40, 2, 3000);
-    this.lHand.movement.addPos(-35, -9, 3000);
+    this.lHand.movement.addPos(-35, 1, 300, -Math.PI / 3);
+    this.lHand.movement.addPos(-38, -9, 300, -Math.PI / 6);
+    this.lHand.movement.addPos(-32, -13, 300, -Math.PI / 10);
+    this.lHand.movement.addPos(-38, -9, 300, -Math.PI / 4);
     this.lHand.movement.start();
+    
+    this.rHand.movement = new BAWL.MovePath(this.head, this.rHand);
+    this.rHand.movement.addPos(35, -13, 300, Math.PI / 10);
+    this.rHand.movement.addPos(38, -9, 300, Math.PI / 6);
+    this.rHand.movement.addPos(33, 1, 300, Math.PI / 3);
+    this.rHand.movement.addPos(38, -9, 300, Math.PI / 4);
+    this.rHand.movement.start();
+    
+    this.rFoot.movement = new BAWL.MovePath(this.head, this.rFoot);
+    this.rFoot.movement.addPos(6, 12, 300);
+    this.rFoot.movement.addPos(6, 0, 300);
+    this.rFoot.movement.addPos(6, -12, 300);
+    this.rFoot.movement.addPos(6, 0, 300);
+    this.rFoot.movement.start();
+    
+    this.lFoot.movement = new BAWL.MovePath(this.head, this.lFoot);
+    this.lFoot.movement.addPos(-6, -12, 300);
+    this.lFoot.movement.addPos(-6, 0, 300);
+    this.lFoot.movement.addPos(-6, 12, 300);
+    this.lFoot.movement.addPos(-6, 0, 300);
+    this.lFoot.movement.start();
+
 }
 
 
@@ -86,13 +149,16 @@ BAWL.Player.prototype.update = function() {
     this.head.body.velocity = this.vel;
     this.head.rotation = game.physics.arcade.angleToPointer(this.head) + Math.PI / 2;
     for (var i = 0; i < this.sprites.length; i++) {
-        this.sprites[i].rotation = this.head.rotation;
+        this.sprites[i].rotation = this.head.rotation + this.sprites[i].offset.rotation;
         Math.tan(this.head.rotation)
         this.sprites[i].x = this.head.x + Math.sin(this.head.rotation) * -this.sprites[i].offset.y + Math.cos(this.head.rotation) * this.sprites[i].offset.x;
         this.sprites[i].y = this.head.y + Math.cos(this.head.rotation) * this.sprites[i].offset.y + Math.sin(this.head.rotation) * this.sprites[i].offset.x;
+        if (this.sprites[i].movement != null) {
+            this.sprites[i].movement.update();
+        }
+        this.sprites[i].body.velocity = this.vel;
     }
-    
-    this.lHand.movement.update();
+    console.log(this.lHand.movement.step);
     //this.lHand.rotation-= Math.PI / 4;
     //this.rHand.rotation+= Math.PI / 4;
 }
@@ -108,12 +174,24 @@ BAWL.Player.prototype.moveUp = function(val) {
 BAWL.Player.prototype.moveDown = function(val) {
     game.physics.arcade.velocityFromAngle(this.head.angle - 90, -val, this.vel);
 }
-
 BAWL.Player.prototype.moveRight = function(val) {
-    this.head.body.angularVelocity = val;
+    game.physics.arcade.velocityFromAngle(this.head.angle - 180, -val, this.vel)
 }
 BAWL.Player.prototype.moveLeft = function(val) {
-    this.head.body.angularVelocity = -val;
+    game.physics.arcade.velocityFromAngle(this.head.angle, -val, this.vel)
+}
+
+BAWL.Player.prototype.moveUpLeft = function(val) {
+    game.physics.arcade.velocityFromAngle(this.head.angle + 45, -val, this.vel);
+}
+BAWL.Player.prototype.moveDownLeft = function(val) {
+    game.physics.arcade.velocityFromAngle(this.head.angle - 45, -val, this.vel);
+}
+BAWL.Player.prototype.moveUpRight = function(val) {
+    game.physics.arcade.velocityFromAngle(this.head.angle - 45, val, this.vel)
+}
+BAWL.Player.prototype.moveDownRight = function(val) {
+    game.physics.arcade.velocityFromAngle(this.head.angle - 135, -val, this.vel)
 }
 
 

@@ -69,8 +69,16 @@ BAWL.Player = function(assetName, x, y) {
     //if collision breaks, use this for body.velocity
     this.vel = new Phaser.Point(0, 0);
     
-    
+    this.setupAni();
 }
+
+BAWL.Player.prototype.setupAni = function() {
+    this.lHand.movement = new BAWL.MovePath(this.head, this.lHand);
+    this.lHand.movement.addPos(-40, 2, 3000);
+    this.lHand.movement.addPos(-35, -9, 3000);
+    this.lHand.movement.start();
+}
+
 
 
 
@@ -84,9 +92,9 @@ BAWL.Player.prototype.update = function() {
         this.sprites[i].y = this.head.y + Math.cos(this.head.rotation) * this.sprites[i].offset.y + Math.sin(this.head.rotation) * this.sprites[i].offset.x;
     }
     
-        console.log((this.head.rotation));
-    this.lHand.rotation-= Math.PI / 4;
-    this.rHand.rotation+= Math.PI / 4;
+    this.lHand.movement.update();
+    //this.lHand.rotation-= Math.PI / 4;
+    //this.rHand.rotation+= Math.PI / 4;
 }
 //___________________________MOTION____________________________\\
 BAWL.Player.prototype.setZeroVelocity = function() {
@@ -107,6 +115,7 @@ BAWL.Player.prototype.moveRight = function(val) {
 BAWL.Player.prototype.moveLeft = function(val) {
     this.head.body.angularVelocity = -val;
 }
+
 
 
 

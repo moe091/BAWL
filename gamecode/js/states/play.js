@@ -11,6 +11,7 @@ BAWL.play = {
         this.createWASD();
         
         this.player = new BAWL.Player('char1', 1500, 1800);
+        BAWL.gameWorld.addChar(this.player);
         game.camera.follow(this.player.head);
         
     },

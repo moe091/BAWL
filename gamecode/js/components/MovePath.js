@@ -1,6 +1,8 @@
-BAWL.MovePath = function(parent, sprite) {
+BAWL.MovePath = function(parent, sprite, movement) {
     this.parent = parent;
     this.sprite = sprite;
+    this.movement = movement;
+    this.movement.addPath(this);
     
     if (sprite.offset == null) { //sprites need an offset property because that's how MovePath updates their location relative to it's actual position
         console.warn("Sprite doesn't have offset object, creating default one. Sprite:");
@@ -36,10 +38,11 @@ BAWL.MovePath = function(parent, sprite) {
 //_________________________________SETUP____________________________________\\
 
 //each point defines the endpoint of a motion that begins at the point before it(n-1).
-BAWL.MovePath.prototype.addPos = function(x, y, duration, rotation) {
+BAWL.MovePath.prototype.addPos = function(x, y, duration, rotation, s) {
     var point = new Phaser.Point(x, y);
     point.rotation = (rotation == null) ? 0 : rotation;
     point.duration = duration;
+    point.sprite = s;
     this.positions.push(point);
 }
 

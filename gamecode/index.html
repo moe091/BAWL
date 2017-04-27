@@ -4,7 +4,15 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello phaser!</title>
-        <script src="phaser.js"></script>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        
+        
+        <!-----------------------LIBS----------------------->
+        <script src="libs/phaser.js"></script>
+        <script src="libs/jquery-3.2.1.js"></script>
+        
+        
+        <!-----------------------GAME----------------------->
         <script src="js/states/preload.js"></script>
         <script src="js/states/play.js"></script>
         
@@ -13,24 +21,86 @@
         <script src="js/objects/player.js"></script>
         
         <script src="js/components/MovePath.js"></script>
+        <script src="js/components/Movement.js"></script>
+        
+        <script src="js/logic/gameWorld.js"></script>
         
         
+        <!----------------------EDITOR--------------------->
+        <script src="editor/aniEditor.js"></script>
+        
+        
+        <script src="setup.js"></script>
         
     </head>
     <body>
 
     <script type="text/javascript">
         window.onload = function() {
-            game = new Phaser.Game(1200, 900, Phaser.AUTO, 'gameDiv');
+            game = new Phaser.Game(1080, 720, Phaser.AUTO, 'gameDiv');
                 
             game.state.add('load', BAWL.load);
             game.state.add('play', BAWL.play);
                 
             game.state.start('load');
+            
+            AnimationEditor.aniEditor = document.getElementById("ani-editor");
         };
-
     </script>
+        
+        <!-------------------------GAME--------------------------->
+        <div id="gameDiv" onclick="AnimationEditor.unpause()"></div>
+        
+        
+        <!------------------------EDITOR--------------------------->
+        <div id="ani-editor" class="editor">
+            <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
+            
+            <div class="compGroup">
+                
+                <div id="charSelect" class="editSelect">
+                    <label>Select a Character: </label>
+                    <select id="charDropdown" class="editDD">
+                        <!-- populated by AnimationEditor.populateChars(chars) -->
+                    </select>
+                </div>
+                
+                
+                <div id="movementSelect" class="editSelect">
+                    <label>Select a Movement: </label>
+                    <select id="movementDropdown" class="editDD">
+                        <!-- populated populateMovements -->
+                    </select>
+                </div>
+                
 
-        <div id="gameDiv"></div>
+                <div id="spriteSelect" class="editSelect">
+                    <label> Select a Sprite: </label>
+                    <select id="spriteDropdown" class="editDD">
+                        <!-- populated by AnimatinoEditor.populateSprites() -->
+                    </select>
+                </div>
+                
+            </div> <!-- class compGroup | select char/movement/sprite -->
+            
+        </div>
+        
+        
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

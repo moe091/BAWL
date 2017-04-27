@@ -1,0 +1,64 @@
+body {
+    background-color: #252525;
+}
+
+#gameDiv {
+    margin: 20px 5px 20px 2px;
+    border: 5px white solid;
+    border-radius: 16px;
+    width: 1080px;
+    height: 720px;
+    display: inline-block;
+    float: left;
+}
+
+#ani-editor {
+    height: 720px;
+    width: 480px;
+    background-color: #000;
+    border: 1px #ddd solid;
+    border-radius: 3px;
+    display: inline-block;
+    float: left;
+    margin-top: 23px;
+    text-align: center;
+    color: #f1f1f1;
+}
+
+
+
+/**---------------------------EDITOR CLASSES-----------------------------**/
+.compGroup {
+    padding: 5px;
+    margin: 8px;
+    background-color: #000;
+    border: 1px #888 dashed;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.editSelect {
+    margin: 10px auto;
+    text-align: center;
+    display: inline-block;
+}
+
+.editSelect select {
+    display: inline-block;
+    margin: 3px;
+}
+
+.editSelect label {
+    display: inline-block;
+    margin: 3px;
+}
+
+
+/**---------------------ANIMATION EDITOR COMPONENTS---------------------**/
+#btnAniEditor {
+    width: 150px;
+    padding: 2px 5px;
+    margin: 5px auto 20px auto;
+    display: block;
+}
+

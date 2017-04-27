@@ -15,12 +15,12 @@ BAWL.load = {
 
     
     loadChar: function() {
-        game.load.image('char1_head', '../../assets/chars/char1_head.png');
-        game.load.image('char1_shoulder', '../../assets/chars/char1_shoulder.png');
-        game.load.image('char1_elbow', '../../assets/chars/char1_elbow.png');
-        game.load.image('char1_hand', '../../assets/chars/char1_hand.png');
-        game.load.image('char1_bod', '../../assets/chars/char1_bod.png');
-        game.load.image('char1_foot', '../../assets/chars/char1_foot.png');
+        game.load.image('char1_head', '../../assets/chars/char1_s_head.png');
+        game.load.image('char1_shoulder', '../../assets/chars/char1_s_shoulder.png');
+        game.load.image('char1_elbow', '../../assets/chars/char1_s_elbow.png');
+        game.load.image('char1_hand', '../../assets/chars/char1_s_hand.png');
+        game.load.image('char1_bod', '../../assets/chars/char1_s_bod.png');
+        game.load.image('char1_foot', '../../assets/chars/char1_s_foot.png');
     }
     
 

@@ -20,14 +20,14 @@
     <body>
 
     <script type="text/javascript">
-            window.onload = function() {
-                game = new Phaser.Game(1200, 900, Phaser.AUTO, 'gameDiv');
+        window.onload = function() {
+            game = new Phaser.Game(1200, 900, Phaser.AUTO, 'gameDiv');
                 
-                game.state.add('load', BAWL.load);
-                game.state.add('play', BAWL.play);
+            game.state.add('load', BAWL.load);
+            game.state.add('play', BAWL.play);
                 
-                game.state.start('load');
-            };
+            game.state.start('load');
+        };
 
     </script>
 

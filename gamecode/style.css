@@ -37,6 +37,11 @@ body {
     display: inline-block;
 }
 
+.valSpan {
+    display: inline-block;
+    margin: 2px 5px;
+}
+
 .editSelect {
     margin: 10px auto;
     text-align: center;
@@ -53,6 +58,29 @@ body {
     margin: 3px;
 }
 
+.editInputN {
+    width: 50px;
+}
+.editInputLN {
+    width: 75px;
+}
+
+.editVal {
+    background-color: #222;
+    margin: 0 0 12px 0;
+}
+.valSpan label {
+    font-size: 0.9em;
+    margin: 1px;
+}
+.valSpan input {
+    font-size: 0.8em;
+    height: 0.9em;
+}
+.cLabel {
+    margin: 6px auto 1px auto;
+}
+
 
 /**---------------------ANIMATION EDITOR COMPONENTS---------------------**/
 #btnAniEditor {
@@ -60,5 +88,14 @@ body {
     padding: 2px 5px;
     margin: 5px auto 20px auto;
     display: block;
+}
+
+#coordEdit {
+    font-size: 0.8em;
+}
+
+#coordEdit input {
+    font-size: 0.8em;
+    height: 0.9em;
 }
 

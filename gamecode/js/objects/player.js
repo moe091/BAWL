@@ -28,10 +28,23 @@ BAWL.Player.prototype.update = function() {
             //update movement paths for all body parts that have one
             if (this.parts.children[i].movement != null) {
                 this.parts.children[i].movement.update();
+                console.log("hand rot: " + this.lHand.rotation + "\nHand Rotation Offset: " + this.lHand.offset.rotation);
             }
-
+            
+            console.log("moving update");
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
+    }
+    
+   
+}
+
+BAWL.Player.prototype.changePos = function() {
+    console.log("player changePos():");
+    for (var i = 0; i < this.parts.children.length; i++) {
+        this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
+        this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
+        this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
     }
 }
 
@@ -192,69 +205,90 @@ BAWL.Player.prototype.setupAni = function() {
     
     this.aniSpeed = 200;
     this.movements[0] = new BAWL.Movement(this, "walk"); //this.moveKeys['walk'] = 0(index)
-    this.movements[1] = new BAWL.Movement(this, "atkPrimary");
     
     this.bod.movement = new BAWL.MovePath(this.head, this.bod, this.movements[this.moveKeys.walk]);
-    this.bod.movement.addPos(0, 3, this.aniSpeed, -Math.PI / 16);
-    this.bod.movement.addPos(0, 3, this.aniSpeed * 2, Math.PI / 16);
-    this.bod.movement.addPos(0, 3, this.aniSpeed, 0);
+    this.bod.movement.addPos(this.bod, 0, 3, this.aniSpeed, -Math.PI / 16);
+    this.bod.movement.addPos(this.bod, 0, 3, this.aniSpeed * 2, Math.PI / 16);
+    this.bod.movement.addPos(this.bod, 0, 3, this.aniSpeed, 0);
     this.bod.movement.start();
     
     this.rShoulder.movement = new BAWL.MovePath(this.head, this.rShoulder, this.movements[this.moveKeys.walk]);
-    this.rShoulder.movement.addPos(17, -4, this.aniSpeed, -Math.PI / 32);
-    this.rShoulder.movement.addPos(18, 0, this.aniSpeed, 0);
-    this.rShoulder.movement.addPos(17, 4, this.aniSpeed, -Math.PI / 32);
-    this.rShoulder.movement.addPos(18, 0, this.aniSpeed, 0);
+    this.rShoulder.movement.addPos(this.rShoulder, 17, -4, this.aniSpeed, -Math.PI / 32);
+    this.rShoulder.movement.addPos(this.rShoulder, 18, 0, this.aniSpeed, 0);
+    this.rShoulder.movement.addPos(this.rShoulder, 17, 4, this.aniSpeed, -Math.PI / 32);
+    this.rShoulder.movement.addPos(this.rShoulder, 18, 0, this.aniSpeed, 0);
     this.rShoulder.movement.start();
     
     this.lShoulder.movement = new BAWL.MovePath(this.head, this.lShoulder, this.movements[this.moveKeys.walk]);
-    this.lShoulder.movement.addPos(-17, 4, this.aniSpeed, -Math.PI / 32);
-    this.lShoulder.movement.addPos(-18, 0, this.aniSpeed, 0);
-    this.lShoulder.movement.addPos(-17, -4, this.aniSpeed, -Math.PI / 32);
-    this.lShoulder.movement.addPos(-18, 0, this.aniSpeed, 0);
+    this.lShoulder.movement.addPos(this.lShoulder, -17, 4, this.aniSpeed, -Math.PI / 32);
+    this.lShoulder.movement.addPos(this.lShoulder, -18, 0, this.aniSpeed, 0);
+    this.lShoulder.movement.addPos(this.lShoulder, -17, -4, this.aniSpeed, -Math.PI / 32);
+    this.lShoulder.movement.addPos(this.lShoulder, -18, 0, this.aniSpeed, 0);
     this.lShoulder.movement.start();
     
     this.lElbow.movement = new BAWL.MovePath(this.head, this.lElbow, this.movements[this.moveKeys.walk]);
-    this.lElbow.movement.addPos(-25, 3, this.aniSpeed);
-    this.lElbow.movement.addPos(-27, -2, this.aniSpeed);
-    this.lElbow.movement.addPos(-25, -5, this.aniSpeed);
-    this.lElbow.movement.addPos(-27, -2, this.aniSpeed);
+    this.lElbow.movement.addPos(this.lElbow, -25, 3, this.aniSpeed);
+    this.lElbow.movement.addPos(this.lElbow, -27, -2, this.aniSpeed);
+    this.lElbow.movement.addPos(this.lElbow, -25, -5, this.aniSpeed);
+    this.lElbow.movement.addPos(this.lElbow, -27, -2, this.aniSpeed);
     this.lElbow.movement.start();
     
     this.rElbow.movement = new BAWL.MovePath(this.head, this.rElbow, this.movements[this.moveKeys.walk]);
-    this.rElbow.movement.addPos(25, -6, this.aniSpeed);
-    this.rElbow.movement.addPos(27, -2, this.aniSpeed);
-    this.rElbow.movement.addPos(25, 2, this.aniSpeed);
-    this.rElbow.movement.addPos(27, -2, this.aniSpeed);
+    this.rElbow.movement.addPos(this.rElbow, 25, -6, this.aniSpeed);
+    this.rElbow.movement.addPos(this.rElbow, 27, -2, this.aniSpeed);
+    this.rElbow.movement.addPos(this.rElbow, 25, 2, this.aniSpeed);
+    this.rElbow.movement.addPos(this.rElbow, 27, -2, this.aniSpeed);
     this.rElbow.movement.start();
     
     this.lHand.movement = new BAWL.MovePath(this.head, this.lHand, this.movements[this.moveKeys.walk]);
-    this.lHand.movement.addPos(-35, 1, this.aniSpeed, -Math.PI / 3);
-    this.lHand.movement.addPos(-38, -9, this.aniSpeed, -Math.PI / 6);
-    this.lHand.movement.addPos(-32, -13, this.aniSpeed, -Math.PI / 10);
-    this.lHand.movement.addPos(-38, -9, this.aniSpeed, -Math.PI / 4);
+    this.lHand.movement.addPos(this.lHand, -35, 1, this.aniSpeed, -Math.PI / 3);
+    this.lHand.movement.addPos(this.lHand, -38, -9, this.aniSpeed, -Math.PI / 6);
+    this.lHand.movement.addPos(this.lHand, -32, -13, this.aniSpeed, -Math.PI / 10);
+    this.lHand.movement.addPos(this.lHand, -38, -9, this.aniSpeed, -Math.PI / 4);
     this.lHand.movement.start();
     
     this.rHand.movement = new BAWL.MovePath(this.head, this.rHand, this.movements[this.moveKeys.walk]);
-    this.rHand.movement.addPos(35, -13, this.aniSpeed, Math.PI / 10);
-    this.rHand.movement.addPos(38, -9, this.aniSpeed, Math.PI / 6);
-    this.rHand.movement.addPos(33, 1, this.aniSpeed, Math.PI / 3);
-    this.rHand.movement.addPos(38, -9, this.aniSpeed, Math.PI / 4);
+    this.rHand.movement.addPos(this.rHand, 35, -13, this.aniSpeed, Math.PI / 10);
+    this.rHand.movement.addPos(this.rHand, 38, -9, this.aniSpeed, Math.PI / 6);
+    this.rHand.movement.addPos(this.rHand, 33, 1, this.aniSpeed, Math.PI / 3);
+    this.rHand.movement.addPos(this.rHand, 38, -9, this.aniSpeed, Math.PI / 4);
     this.rHand.movement.start();
     
     this.rFoot.movement = new BAWL.MovePath(this.head, this.rFoot, this.movements[this.moveKeys.walk]);
-    this.rFoot.movement.addPos(6, 12, this.aniSpeed);
-    this.rFoot.movement.addPos(6, 0, this.aniSpeed);
-    this.rFoot.movement.addPos(6, -12, this.aniSpeed);
-    this.rFoot.movement.addPos(6, 0, this.aniSpeed);
+    this.rFoot.movement.addPos(this.rFoot, 6, 12, this.aniSpeed);
+    this.rFoot.movement.addPos(this.rFoot, 6, 0, this.aniSpeed);
+    this.rFoot.movement.addPos(this.rFoot, 6, -12, this.aniSpeed);
+    this.rFoot.movement.addPos(this.rFoot, 6, 0, this.aniSpeed);
     this.rFoot.movement.start();
     
     this.lFoot.movement = new BAWL.MovePath(this.head, this.lFoot, this.movements[this.moveKeys.walk]);
-    this.lFoot.movement.addPos(-6, -12, this.aniSpeed);
-    this.lFoot.movement.addPos(-6, 0, this.aniSpeed);
-    this.lFoot.movement.addPos(-6, 12, this.aniSpeed);
-    this.lFoot.movement.addPos(-6, 0, this.aniSpeed);
+    this.lFoot.movement.addPos(this.lFoot, -6, -12, this.aniSpeed);
+    this.lFoot.movement.addPos(this.lFoot, -6, 0, this.aniSpeed);
+    this.lFoot.movement.addPos(this.lFoot, -6, 12, this.aniSpeed);
+    this.lFoot.movement.addPos(this.lFoot, -6, 0, this.aniSpeed);
     this.lFoot.movement.start();
+    
+    console.log(this.movements[0].movePaths);
 }
+
+
+BAWL.Player.prototype.setPositions = function(ps) {
+    for (i in ps) {
+        ps[i].sprite.rotation = this.head.rotation + ps[i].rotation;
+        ps[i].sprite.x = this.head.x + Math.sin(this.head.rotation) * -ps[i].y + Math.cos(this.head.rotation) * ps[i].x;
+        ps[i].sprite.y = this.head.y + Math.cos(this.head.rotation) * ps[i].y + Math.sin(this.head.rotation) * ps[i].x;
+    }  
+    
+    
+}
+
+
+
+
+
+
+
+
+
 
 

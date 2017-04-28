@@ -24,9 +24,9 @@ BAWL.MovePath = function(parent, sprite, movement) {
     this.elapsed = 0;
     this.startTime = 0;
     this.tRatio = 0;
-    
+    this.curTime = 0;
     //add default position as position[0]
-    this.addPos(this.default.x, this.default.y, 0, this.default.rotation);
+    this.addPos(sprite, this.default.x, this.default.y, 0, this.default.rotation);
 }
 
 
@@ -38,11 +38,15 @@ BAWL.MovePath = function(parent, sprite, movement) {
 //_________________________________SETUP____________________________________\\
 
 //each point defines the endpoint of a motion that begins at the point before it(n-1).
-BAWL.MovePath.prototype.addPos = function(x, y, duration, rotation, s) {
+BAWL.MovePath.prototype.addPos = function(s, x, y, duration, rotation) {
+    this.curTime+= duration;
     var point = new Phaser.Point(x, y);
     point.rotation = (rotation == null) ? 0 : rotation;
     point.duration = duration;
+    point.time = this.curTime;
     point.sprite = s;
+    point.path = this;
+    this.movement.addPos(this, point);
     this.positions.push(point);
 }
 

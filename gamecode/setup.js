@@ -23,13 +23,21 @@ $(document).ready(function(){
         }
     );
     
-    
+    updateEditorCallbacks();
 
     
 });
 
 function updateEditorCallbacks() {
-        $(".pVal").change(
+    $(".pVal").change(
+        function(data) {
+            console.log("change: ");
+            console.log(data.target.value);
+            AnimationEditor.updatePosition();
+        }
+    );
+    
+    $(".pVal").click(
         function(data) {
             console.log("change: ");
             console.log(data.target.value);

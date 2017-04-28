@@ -10,7 +10,7 @@ sprite: null,
 sIndex: null,
 curPos: null,
     
-oldPos: null;
+oldPos: null,
     
 editMode: function() {
     game.input.enabled = false;
@@ -67,7 +67,6 @@ selectChar: function(c) {
 selectMovement: function(m) {
     this.movement = this.char.movements[m];
     this.populateTimeSteps();
-    this.movement.printSteps();
 },
 
 selectTimestep: function(t) {
@@ -78,46 +77,43 @@ selectTimestep: function(t) {
     this.updateVals();
 },
 
-    
+log: function() {
+    console.log("old: ");
+    console.log(oldPos);
+    console.log("new: ");
+    console.log(this.tStep.positions[0]);
+},
 updateVals: function() {
-    console.log(this.curPos);
+    oldPos = this.tStep.positions[0];
     var posi;
     for (i in this.tStep.positions) {
         posi = this.tStep.positions[i];
         $("#xVal-" + i).val(posi.x);
         $("#yVal-" + i).val(posi.y);
-        $("#rotVal-" + i).val(posi.rotation);
+        $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
         $("#durVal-" + i).val(posi.duration);
     }
     this.updatePosition();
 },
     
 updatePosition: function() {
-    console.log("ANI updatePosition() " + this.tStep.positions.length);
+    console.log("updatePosition(). current step: ");
+    console.log(this.tStep);
     
-    var ps;
     for (i in this.tStep.positions) {
-        ps = this.tStep.positions[i];
-        ps.sprite.offset.x = $("#xVal-" + i).val();
-        ps.sprite.offset.y = $("#yVal-" + i).val();
-        
-        console.log("-----");
-        console.log(ps.sprite.offset.rotation)
-        ps.sprite.offset.rotation = $("#rotVal-" + i).val(); 
-        console.log(ps.sprite.offset.rotation)
-        console.log("-----");
+        this.tStep.positions[i].x = Number($("#xVal-" + i).val());
+        this.tStep.positions[i].y = Number($("#yVal-" + i).val());
+        this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
     }
     
-    this.char.changePos();
+    this.char.changePos(this.tStep);
+    
 },
     
 setSpriteOffset(pos) {
-    console.log("HERE");
     pos.sprite.offset.x = pos.x;
     pos.sprite.offset.y = pos.y;
     pos.sprite.offset.rotation = pos.rotation;
-    console.log(pos.sprite.name);
-    console.log(pos.sprite.offset);
 },
     
 createStepEditor() {
@@ -125,6 +121,7 @@ createStepEditor() {
     
     sEditor.html("");
     var ps;
+    var degrees;
     for (var i = 0; i < this.tStep.positions.length; i++) {
         ps = this.tStep.positions[i];
         sEditor.append("<div id='coordEdit-" + i + "' " +  "class='editVal'>");//editVal div
@@ -151,8 +148,14 @@ createStepEditor() {
         sEditor.append("</div>");
     }
     updateEditorCallbacks();
+},
+  
+
+makeDownloadLink: function() {
+    var data = "text/json;charset=utf-8," + encodeURIComponent(this.movement.jsonPositions($("#nameInput").val()));
+    console.log(data);
+     $("#aniBtns").append("<a href='data:" + data + "' download='data.json'>Download JSON</a>");
 }
-    
     
 
 };

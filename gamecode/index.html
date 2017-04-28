@@ -54,8 +54,12 @@
         
         <!------------------------EDITOR--------------------------->
         <div id="ani-editor" class="editor">
-            <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
-            
+            <div id="aniBtns">
+                <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
+                <button onclick = "AnimationEditor.makeDownloadLink()" id="btnDlLink">Generate Json</button>
+            </div>
+                
+                
             <div class="compGroup">
                 
                 <div id="charSelect" class="editSelect">
@@ -83,14 +87,11 @@
                     
                 </div>
                 
-                
-                <div id="spriteSelect" class="editSelect">
-                    <label> Select a Sprite: </label>
-                    <select id="spriteDropdown" class="editDD">
-                        <!-- populated by AnimatinoEditor.populateSprites() -->
-                    </select>
+                <div id="nameSelect" class="editSelect">
+                    <label>Name: </label>
+                    <input type="text" id="nameInput" class="textInput">
                 </div>
-                
+                    
                 
             </div><!-- compGroup selectors -->
             

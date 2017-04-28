@@ -25,22 +25,39 @@ BAWL.Movement.prototype.update = function() {
 }
 
 
-BAWL.Movement.prototype.endStep = function() {
-    this.step++;
-    if (this.step >= this.steps.length) {
-        this.step = 0;
-        this.elapsed = 0;
-        this.nextStepTime = this.steps[this.step + 1].time;
-        this.curStep = this.steps[step];
-    } else {
-        this.curStep = this.steps[step];
-        if (this.step + 1 >= this.steps.length) {
-            this.nextStepTime = this.curStep.time + this.curStep.duration;
-        } else {
-            this.nextStepTime = this.steps[this.step + 1].time;
+BAWL.Movement.prototype.jsonPositions = function(n) {
+    if (n == null)
+        n = this.name;
+    var jsonPaths = [];
+    for (m in this.movePaths) { //each sprite has a path of positions
+        var path = {};
+        path.spriteName = this.movePaths[m].sprite.name;
+        path.defaultX = this.movePaths[m].default.x;
+        path.defaultY = this.movePaths[m].default.y;
+        path.defaultRot = this.movePaths[m].default.rotation;
+        path.movementName = this.movePaths[m].movement.name;
+        path.parentName = this.movePaths[m].parent.name;
+        path.positions = [];
+        path.index = m;
+        for (p in this.movePaths[m].positions) {
+            var pos = this.movePaths[m].positions[p];
+            var jPos = {};
+            
+            jPos.time = pos.time;
+            jPos.spriteName = pos.sprite.name;
+            jPos.x = pos.x;
+            jPos.y = pos.y;
+            jPos.rotation = pos.rotation;
+            jPos.duration = pos.duration;
+            jPos.index = p;
+            path.positions.push(jPos);
+            
+            
         }
+        jsonPaths.push(path);
     }
-    
+    console.log(jsonPaths);
+    return jsonPaths;
 }
 
 
@@ -52,7 +69,6 @@ BAWL.Movement.prototype.setStep = function(char, sNum) {
 }
 
 BAWL.Movement.prototype.addPos = function(path, point) {
-    console.log(point.time);
     exists = false;
     for (s in this.steps) {
         if (this.steps[s].time == point.time) {

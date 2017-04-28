@@ -28,10 +28,8 @@ BAWL.Player.prototype.update = function() {
             //update movement paths for all body parts that have one
             if (this.parts.children[i].movement != null) {
                 this.parts.children[i].movement.update();
-                console.log("hand rot: " + this.lHand.rotation + "\nHand Rotation Offset: " + this.lHand.offset.rotation);
             }
             
-            console.log("moving update");
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
     }
@@ -39,8 +37,13 @@ BAWL.Player.prototype.update = function() {
    
 }
 
-BAWL.Player.prototype.changePos = function() {
+BAWL.Player.prototype.changePos = function(tStep) {
     console.log("player changePos():");
+    for (var j = 0; j < tStep.positions.length; j++) {
+        tStep.positions[j].sprite.offset.x = tStep.positions[j].x;
+        tStep.positions[j].sprite.offset.y = tStep.positions[j].y;
+        tStep.positions[j].sprite.offset.rotation = tStep.positions[j].rotation;
+    }
     for (var i = 0; i < this.parts.children.length; i++) {
         this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
         this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;

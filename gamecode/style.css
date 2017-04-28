@@ -13,7 +13,7 @@ body {
 }
 
 #ani-editor {
-    height: 720px;
+    height: 760px;
     width: 480px;
     background-color: #000;
     border: 1px #ddd solid;
@@ -74,24 +74,41 @@ body {
     margin: 1px;
 }
 .valSpan input {
-    font-size: 0.8em;
-    height: 0.9em;
+    height: 1.1em;
+    font-size: 1.1em;
+    line-height: 1.1em;
 }
+input[type=number]::-webkit-inner-spin-button { 
+    cursor:pointer;
+    display:block;
+    color: #333;
+    text-align:center;
+    position:relative;
+    width: 1.6em;
+    height: 1.6em;
+}   
 .cLabel {
-    margin: 6px auto 1px auto;
+    margin: -2px auto 0 auto;
 }
 
 
 /**---------------------ANIMATION EDITOR COMPONENTS---------------------**/
 #btnAniEditor {
-    width: 150px;
+    width: 100px;
     padding: 2px 5px;
-    margin: 5px auto 20px auto;
-    display: block;
+    display: inline-block;
 }
 
-#coordEdit {
-    font-size: 0.8em;
+#nameInput {
+    width: 100px;
+}
+
+.btn {
+    display: inline-block;
+}
+
+
+
 }
 
 #coordEdit input {

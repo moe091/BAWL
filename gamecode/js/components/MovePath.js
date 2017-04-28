@@ -93,6 +93,7 @@ BAWL.MovePath.prototype.update = function() {
         if (this.tRatio >= 1) {
             this.endStep(this.elapsed - this.target.duration);
         } else {
+            console.log("tRatio: " + this.tRatio);
             this.sprite.offset.x = this.previous.x + (this.tRatio * (this.target.x - this.previous.x));
             this.sprite.offset.y = this.previous.y + (this.tRatio * (this.target.y - this.previous.y));
             this.sprite.offset.rotation = this.previous.rotation + (this.tRatio * (this.target.rotation - this.previous.rotation));

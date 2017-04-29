@@ -6,10 +6,10 @@ BAWL.Player = function(assetName, x, y) {
     
     this.moveKeys = {};
     this.movements = [];
-    this.setupAni();
+    //this.loadAnimation();
     
     this.name = "Player";
-    
+    BAWL.loader.loadAnimation("player", "punch", this.loadAnimation, this);
 }
 
 
@@ -203,6 +203,32 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 //Eventually load these from json file
 //create animations by hand for now
 //TODO: create an editor that either exports JSON or generates code to setup animations
+BAWL.Player.prototype.loadAnimation = function(movepaths, that) {
+    console.log(movepaths); // this will show the info it in firebug console
+    
+    that.movements[0] = new BAWL.Movement(that, "walk"); //this.moveKeys['walk'] = 0(index)
+    
+    for (mp in movepaths) {
+        var s = that.getSpriteByName(movepaths[mp].spriteName);
+        s.movement = new BAWL.MovePath(that.head, s, that.movements[0]);
+        for (pos in movepaths[mp].positions) {
+            s.movement.addPos(s, movepaths[mp].positions[pos].x, movepaths[mp].positions[pos].y, movepaths[mp].positions[pos].duration, movepaths[mp].positions[pos].rotation);
+        }
+        s.movement.start();
+    }
+    console.log(that.movements[0]);
+},
+    
+BAWL.Player.prototype.getSpriteByName = function(n) {
+    for (p in this.parts.children) {
+        if (this.parts.children[p].name === n) {
+            return this.parts.children[p];
+        }
+    }
+    console.log("sprite " + n + " not found! returning null");
+    return null;
+},
+    
 BAWL.Player.prototype.setupAni = function() {
     this.moveKeys["walk"] = 0;
     

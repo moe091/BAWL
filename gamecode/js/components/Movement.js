@@ -31,6 +31,7 @@ BAWL.Movement.prototype.jsonPositions = function(n) {
     var jsonPaths = [];
     for (m in this.movePaths) { //each sprite has a path of positions
         var path = {};
+        path.index = m;
         path.spriteName = this.movePaths[m].sprite.name;
         path.defaultX = this.movePaths[m].default.x;
         path.defaultY = this.movePaths[m].default.y;
@@ -38,26 +39,25 @@ BAWL.Movement.prototype.jsonPositions = function(n) {
         path.movementName = this.movePaths[m].movement.name;
         path.parentName = this.movePaths[m].parent.name;
         path.positions = [];
-        path.index = m;
         for (p in this.movePaths[m].positions) {
             var pos = this.movePaths[m].positions[p];
             var jPos = {};
             
+            jPos.index = p;
             jPos.time = pos.time;
             jPos.spriteName = pos.sprite.name;
             jPos.x = pos.x;
             jPos.y = pos.y;
             jPos.rotation = pos.rotation;
             jPos.duration = pos.duration;
-            jPos.index = p;
             path.positions.push(jPos);
             
             
         }
         jsonPaths.push(path);
     }
-    console.log(jsonPaths);
-    return jsonPaths;
+    //console.log(JSON.stringify(jsonPaths));
+    return JSON.stringify(jsonPaths);
 }
 
 

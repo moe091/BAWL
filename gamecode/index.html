@@ -13,22 +13,26 @@
         
         
         <!-----------------------GAME----------------------->
+        <!-- states -->
         <script src="js/states/preload.js"></script>
         <script src="js/states/play.js"></script>
         
+        <!-- objects -->
         <script src="js/objects/char.js"></script>
-        <script src="js/objects/gameworld.js"></script>
         <script src="js/objects/player.js"></script>
         
+        <!-- components -->
         <script src="js/components/MovePath.js"></script>
         <script src="js/components/Movement.js"></script>
         
+        <!-- logic -->
         <script src="js/logic/gameWorld.js"></script>
         
+        <!-- utility -->
+        <script src="js/utility/loader.js"></script>
         
         <!----------------------EDITOR--------------------->
         <script src="editor/aniEditor.js"></script>
-        
         
         <script src="setup.js"></script>
         
@@ -49,7 +53,7 @@
     </script>
         
         <!-------------------------GAME--------------------------->
-        <div id="gameDiv" onclick="AnimationEditor.unpause()"></div>
+        <div id="gameDiv" onclick="AnimationEditor.unpause()" onblur="AnimationEditor.editMode()"></div>
         
         
         <!------------------------EDITOR--------------------------->

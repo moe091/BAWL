@@ -14,13 +14,14 @@ oldPos: null,
     
 editMode: function() {
     game.input.enabled = false;
-
+    console.log("input disabled");
     this.aniEditor.style.backgroundColor = "#1a1a1a";
 
     this.populateChars(BAWL.gameWorld.chars);
 },
 
 unpause: function() {
+    console.log("input enabled");
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
 },
@@ -154,7 +155,7 @@ createStepEditor() {
 makeDownloadLink: function() {
     var data = "text/json;charset=utf-8," + encodeURIComponent(this.movement.jsonPositions($("#nameInput").val()));
     console.log(data);
-     $("#aniBtns").append("<a href='data:" + data + "' download='data.json'>Download JSON</a>");
+     $("#aniBtns").append("<a href='data:" + data + "' download='" + $("#nameInput").val() + ".json'>Download JSON</a>");
 }
     
 

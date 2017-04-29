@@ -17,9 +17,16 @@ $(document).ready(function(){
         }
     );
     
+    $("#timestepDropdown").click(
+        function() {
+            console.log("timestep ----- click");
+            AnimationEditor.selectTimestep($("#timestepDropdown").val());
+        }
+    );
+    
     $("#spriteDropdown").change(
         function() {
-            //AnimationEditor.selectSprite($("#spriteDropdown").val());
+            AnimationEditor.selectSprite($("#spriteDropdown").val());
         }
     );
     

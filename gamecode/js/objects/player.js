@@ -9,7 +9,7 @@ BAWL.Player = function(assetName, x, y) {
     //this.loadAnimation();
     
     this.name = "Player";
-    BAWL.loader.loadAnimation("player", "punch", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
 }
 
 
@@ -27,11 +27,12 @@ BAWL.Player.prototype.update = function() {
 
             //update movement paths for all body parts that have one
             if (this.parts.children[i].movement != null) {
-                this.parts.children[i].movement.update();
+                
             }
             
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
+        this.movements[0].update();
     }
     
    
@@ -185,6 +186,9 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
     this.head.offset = new Phaser.Point(0, 0);
     game.physics.arcade.enable(this.head);
 
+    for (i in this.parts.children) {
+        this.parts.children[i].index = i;
+    }
     
     this.parts.that = this;
     this.parts.forEach(function(part) {
@@ -203,7 +207,40 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 //Eventually load these from json file
 //create animations by hand for now
 //TODO: create an editor that either exports JSON or generates code to setup animations
-BAWL.Player.prototype.loadAnimation = function(movepaths, that) {
+BAWL.Player.prototype.loadAnimation = function(save, that) {
+    
+    var movement = new BAWL.Movement(that, "walk");
+    
+    for (var i in save.steps) {
+        i = Number(i);
+        var step = new BAWL.step(save.steps[i].time, movement);
+        
+        for (var j in save.steps[i].positions) {
+            if (save.steps[i].positions[j] == null) {
+                console.log("NULL");
+                save.steps[i].positions[j] = {};
+                console.log("i+1 = " + (i + 1));
+                console.log(save.steps[3]);
+                console.log(save.steps[i+1]);
+                save.steps[i].positions[j].x = (save.steps[i+1].positions[j].x + save.steps[i-1].positions[j].x) / 2;
+                save.steps[i].positions[j].y = (save.steps[i+1].positions[j].y + save.steps[i-1].positions[j].y) / 2;
+                save.steps[i].positions[j].rotation = (save.steps[i+1].positions[j].rotation + save.steps[i-1].positions[j].rotation) / 2;
+                save.steps[i].positions[j].spriteName = save.steps[i+1].positions[j].spriteName;
+                console.log(save.steps[i].positions[j]);
+            }
+            
+            step.positions[j] = new Phaser.Point(save.steps[i].positions[j].x, save.steps[i].positions[j].y);
+            step.positions[j].rotation = save.steps[i].positions[j].rotation;
+            step.positions[j].sprite = that.getSpriteByName(save.steps[i].positions[j].spriteName);
+        }
+        
+        movement.steps.push(step);
+    }
+    
+    that.movements[0] = movement;
+    that.movements[0].start();
+    
+    /**
     console.log(movepaths); // this will show the info it in firebug console
     
     that.movements[0] = new BAWL.Movement(that, "walk"); //this.moveKeys['walk'] = 0(index)
@@ -211,12 +248,22 @@ BAWL.Player.prototype.loadAnimation = function(movepaths, that) {
     for (mp in movepaths) {
         var s = that.getSpriteByName(movepaths[mp].spriteName);
         s.movement = new BAWL.MovePath(that.head, s, that.movements[0]);
+        console.log("-------------" + movepaths[mp].spriteName + "-------------");
         for (pos in movepaths[mp].positions) {
-            s.movement.addPos(s, movepaths[mp].positions[pos].x, movepaths[mp].positions[pos].y, movepaths[mp].positions[pos].duration, movepaths[mp].positions[pos].rotation);
+            console.log("pos: " + movepaths[mp].positions[pos].index + ".  dur=" + movepaths[mp].positions[pos].duration + ",  time=" + movepaths[mp].positions[pos].time);
+            s.movement.addPos(s, movepaths[mp].positions[pos].x, movepaths[mp].positions[pos].y, movepaths[mp].positions[pos].duration, movepaths[mp].positions[pos].rotation, movepaths[mp].positions[pos].time);
+            if (that.movements[0].sprites[s.index] == null) {
+                that.movements[0].sprites[s.index] = s;
+            }
         }
         s.movement.start();
     }
-    console.log(that.movements[0]);
+    for (i in that.movements[0].sprites) {
+        console.log(i + " - " + that.movements[0].sprites[i].name + " - " + that.movements[0].sprites[i].index);
+    }
+    that.movements[0].start();
+    
+    **/
 },
     
 BAWL.Player.prototype.getSpriteByName = function(n) {
@@ -310,6 +357,8 @@ BAWL.Player.prototype.setPositions = function(ps) {
     
     
 }
+
+
 
 
 

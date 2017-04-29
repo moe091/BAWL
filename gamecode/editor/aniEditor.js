@@ -37,6 +37,8 @@ populateChars: function(charList) {
     
 populateMovements: function() {
     $("#movementDropdown").html("");
+    console.log("POPULATE MOVEMENTS---");
+    console.log(this.char.movements);
     for (i in this.char.movements) {
         $("#movementDropdown").append('<option value='+i+'>'+ this.char.movements[i].name +'</option>');
     }
@@ -48,7 +50,9 @@ populateTimeSteps: function() {
     for (i in this.movement.steps) {
         $("#timestepDropdown").append("<option value=" + i + ">" + this.movement.steps[i].time + "</option>");
     }
-    this.selectTimestep($("#timestepDropdown").val());
+    
+    if ($("#timestepDropdown").val() != -1)
+        this.selectTimestep($("#timestepDropdown").val());
 },
     
 populateSprites: function() {
@@ -65,17 +69,33 @@ selectChar: function(c) {
     this.populateMovements();
 },
     
+//BAWL.Movement. class that stores all movePaths of a specific movement(e.g 'walk')
 selectMovement: function(m) {
-    this.movement = this.char.movements[m];
+    console.log("select movement #" + m);
+    if (m == -1) {
+        this.movement = new BAWL.Movement(this.char, prompt("Enter name for new movement: "));
+        this.char.movements.push(this.movement);
+        $("#movementDropdown").prepend('<option value='+i+'>'+ this.movement.name +'</option>');
+    } else {
+        this.movement = this.char.movements[m];
+    }
+    console.log("selectMovement, movement: ");
+    console.log(this.movement);
     this.populateTimeSteps();
 },
 
 selectTimestep: function(t) {
     this.tStep = this.movement.steps[t];
+    if (this.movement.steps[t] != null) {
     this.movement.setStep(this.char, t);
     this.createStepEditor();
     this.populateSprites();
     this.updateVals();
+    }
+},
+
+selectSprite: function(s) {
+    console.log(this.tStep);
 },
 
 log: function() {
@@ -123,10 +143,10 @@ createStepEditor() {
     sEditor.html("");
     var ps;
     var degrees;
-    for (var i = 0; i < this.tStep.positions.length; i++) {
-        ps = this.tStep.positions[i];
+    for (var i = 0; i < this.movement.sprites.length; i++) {
+        ps = this.movement.sprites[i];
         sEditor.append("<div id='coordEdit-" + i + "' " +  "class='editVal'>");//editVal div
-            $("#coordEdit-" + i).append("<p class='cLabel'>" + ps.sprite.name + "</p>");//sprite label
+            $("#coordEdit-" + i).append("<p class='cLabel'>" + ps.name + "</p>");//sprite label
             $("#coordEdit-" + i).append("<span class='x valSpan valSpan-" + i + "'>");//value span X
                 $(".x.valSpan-" + i).append("<label>X: </label>");
                 $(".x.valSpan-" + i).append("<input type='number' id='xVal-" + i + "' class='pVal editInputN'>");
@@ -156,9 +176,53 @@ makeDownloadLink: function() {
     var data = "text/json;charset=utf-8," + encodeURIComponent(this.movement.jsonPositions($("#nameInput").val()));
     console.log(data);
      $("#aniBtns").append("<a href='data:" + data + "' download='" + $("#nameInput").val() + ".json'>Download JSON</a>");
+},
+    
+    
+    
+    
+    
+//------------------------------------------NEW BUTTONS------------------------------------------\\
+  
+newMovement: function() {
+    mName = prompt("Enter name for new movement:");
+    newMove = new BAWL.Movement(this.char, mName);
+    this.movement = newMove;
+    this.char.movements.push(newMove);
+    this.populateMovements();
+    
+},
+  
+newStep: function() {
+    newStep = new BAWL.step(prompt("Enter time in MS for new step:"));
+    this.movement.steps.push(newStep);
+    this.populateTimeSteps();
+},
+
+//when Add Sprite is clicked, display sprite dialog
+addSpriteToStep: function() {
+    this.createSpriteDialog();
+},
+createSpriteDialog: function() {
+    $("#spriteDialog").css("display", "inline-block"); //Show Dialog
+    
+    //Populate Dialog with sprites of currently selected char
+    $("#addSpriteOpt").html("");
+    for (i in this.char.parts.children) {
+        $("#addSpriteOpt").append("<option value=" + i + ">" + this.char.parts.children[i].name + "</option>");
+    }
+    
+},
+
+//when sprite is chosen from add sprite dialog, add it to current movement and update step Editor
+addSprite: function() {
+    console.log("val = " + $("#addSpriteOpt").val())
+    console.log(this.char.parts.children[($("#addSpriteOpt").val())]);
+    
+    this.movement.sprites.push(this.char.parts.children[$("#addSpriteOpt").val()]);
 }
     
-
+    
 };
     
 

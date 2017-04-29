@@ -97,6 +97,22 @@
                 </div>
                     
                 
+                <div id="newBtnDiv" class="editBtns">
+                    <button onclick="AnimationEditor.newMovement()" class="newBtn">New Movement</button>
+                    <button onclick="AnimationEditor.newStep()" class="newBtn">Add Step</button>
+                    <button onclick="AnimationEditor.addSpriteToStep()" class="newBtn">Add Sprite</button>
+                    
+                    <div id="spriteDialog" title="Basic dialog">
+                         <select id="addSpriteOpt">
+                              <option value="volvo">Volvo</option>
+                              <option value="saab">Saab</option>
+                              <option value="mercedes">Mercedes</option>
+                              <option value="audi">Audi</option>
+                        </select>
+                        <button onclick="AnimationEditor.addSprite()">Add</button>
+                    </div>
+                </div>
+                
             </div><!-- compGroup selectors -->
             
             

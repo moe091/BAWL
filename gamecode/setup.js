@@ -17,12 +17,12 @@ $(document).ready(function(){
         }
     );
     
-    $("#timestepDropdown").click(
-        function() {
-            console.log("timestep ----- click");
-            AnimationEditor.selectTimestep($("#timestepDropdown").val());
-        }
-    );
+    //$("#timestepDropdown").click(
+    //    function() {
+    //        console.log("timestep ----- click");
+    //        AnimationEditor.selectTimestep($("#timestepDropdown").val());
+    //    }
+    //);
     
     $("#spriteDropdown").change(
         function() {
@@ -41,6 +41,7 @@ function updateEditorCallbacks() {
             console.log("change: ");
             console.log(data.target.value);
             AnimationEditor.updatePosition();
+            console.log("pval CHANGE-----");
         }
     );
     
@@ -48,7 +49,7 @@ function updateEditorCallbacks() {
         function(data) {
             console.log("change: ");
             console.log(data.target.value);
-            AnimationEditor.updatePosition();
+            //AnimationEditor.updatePosition();
         }
     );
 }

@@ -131,7 +131,15 @@ BAWL.Movement.prototype.jsonPositions = function(n) {
 
 
 BAWL.Movement.prototype.setStep = function(char, sNum) {
-    char.setPositions(this.steps[sNum].positions);
+    s = sNum;
+    console.log(s);
+    for (i in s.positions) {
+        s.positions[i].sprite.x = s.positions[i].sprite.offset.x = s.positions[i].x;
+        s.positions[i].sprite.y = s.positions[i].sprite.offset.y = s.positions[i].y;
+        s.positions[i].sprite.rotation = s.positions[i].sprite.offset.rotation = s.positions[i].rotation;
+        
+    }
+    console.log(s.positions[2].sprite);
 }
 
 BAWL.Movement.prototype.addPos = function(path, point) {

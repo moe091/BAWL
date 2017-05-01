@@ -71,26 +71,26 @@ selectChar: function(c) {
     
 //BAWL.Movement. class that stores all movePaths of a specific movement(e.g 'walk')
 selectMovement: function(m) {
-    console.log("select movement #" + m);
     if (m == -1) {
-        this.movement = new BAWL.Movement(this.char, prompt("Enter name for new movement: "));
-        this.char.movements.push(this.movement);
-        $("#movementDropdown").prepend('<option value='+i+'>'+ this.movement.name +'</option>');
+        console.log("WARNING: OLD CODE - THIS Isn't how new movements are created anymore");
+        //this.movement = new BAWL.Movement(this.char, prompt("Enter name for new movement: "));
+        //this.char.movements.push(this.movement);
+        //$("#movementDropdown").prepend('<option value='+i+'>'+ this.movement.name +'</option>');
     } else {
-        this.movement = this.char.movements[m];
+        this.movement = this.char.movements[0];
     }
-    console.log("selectMovement, movement: ");
-    console.log(this.movement);
     this.populateTimeSteps();
 },
 
 selectTimestep: function(t) {
     this.tStep = this.movement.steps[t];
     if (this.movement.steps[t] != null) {
-    this.movement.setStep(this.char, t);
-    this.createStepEditor();
-    this.populateSprites();
-    this.updateVals();
+        this.createStepEditor();
+        this.updateVals();
+        this.updatePosition();
+        this.populateSprites();
+    } else {
+        console.log("TiMeStep is null");
     }
 },
 
@@ -105,21 +105,17 @@ log: function() {
     console.log(this.tStep.positions[0]);
 },
 updateVals: function() {
-    oldPos = this.tStep.positions[0];
     var posi;
-    for (i in this.tStep.positions) {
+    for (var i in this.tStep.positions) {
         posi = this.tStep.positions[i];
         $("#xVal-" + i).val(posi.x);
         $("#yVal-" + i).val(posi.y);
         $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
         $("#durVal-" + i).val(posi.duration);
     }
-    this.updatePosition();
 },
     
 updatePosition: function() {
-    console.log("updatePosition(). current step: ");
-    console.log(this.tStep);
     
     for (i in this.tStep.positions) {
         this.tStep.positions[i].x = Number($("#xVal-" + i).val());
@@ -127,7 +123,7 @@ updatePosition: function() {
         this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
     }
     
-    this.char.changePos(this.tStep);
+    this.movement.setStep(this.char, this.tStep);
     
 },
     
@@ -168,7 +164,7 @@ createStepEditor() {
             $("#coordEdit-" + i).append("</span>");//close  value span Dur
         sEditor.append("</div>");
     }
-    updateEditorCallbacks();
+    //updateEditorCallbacks();
 },
   
 
@@ -214,13 +210,7 @@ createSpriteDialog: function() {
     
 },
 
-//when sprite is chosen from add sprite dialog, add it to current movement and update step Editor
-addSprite: function() {
-    console.log("val = " + $("#addSpriteOpt").val())
-    console.log(this.char.parts.children[($("#addSpriteOpt").val())]);
-    
-    this.movement.sprites.push(this.char.parts.children[$("#addSpriteOpt").val()]);
-}
+
     
     
 };

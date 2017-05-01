@@ -39,6 +39,7 @@ BAWL.Player.prototype.update = function() {
 }
 
 BAWL.Player.prototype.changePos = function(tStep) {
+    if (false) {
     console.log("player changePos():");
     for (var j = 0; j < tStep.positions.length; j++) {
         tStep.positions[j].sprite.offset.x = tStep.positions[j].x;
@@ -49,6 +50,7 @@ BAWL.Player.prototype.changePos = function(tStep) {
         this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
         this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
         this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
+    }
     }
 }
 
@@ -210,7 +212,9 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 BAWL.Player.prototype.loadAnimation = function(save, that) {
     
     var movement = new BAWL.Movement(that, "walk");
-    
+    for (var i in save.sprites) {
+        movement.sprites[Number(that.getSpriteByName(save.sprites[i]).index)] = that.getSpriteByName(save.sprites[i]);
+    }
     for (var i in save.steps) {
         i = Number(i);
         var step = new BAWL.step(save.steps[i].time, movement);
@@ -236,7 +240,9 @@ BAWL.Player.prototype.loadAnimation = function(save, that) {
         
         movement.steps.push(step);
     }
-    
+    console.log("loaded movement. sprites:");
+    console.log(movement);
+    console.log(movement.sprites);
     that.movements[0] = movement;
     that.movements[0].start();
     

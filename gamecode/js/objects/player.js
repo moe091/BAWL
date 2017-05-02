@@ -6,6 +6,7 @@ BAWL.Player = function(assetName, x, y) {
     
     this.moveKeys = {};
     this.movements = [];
+    this.curMovement;
     //this.loadAnimation();
     
     this.name = "Player";
@@ -32,7 +33,7 @@ BAWL.Player.prototype.update = function() {
             
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
-        this.movements[0].update();
+        this.curMovement.update();
     }
     
    
@@ -244,7 +245,8 @@ BAWL.Player.prototype.loadAnimation = function(save, that) {
     console.log(movement);
     console.log(movement.sprites);
     that.movements[0] = movement;
-    that.movements[0].start();
+    that.curMovement = movement;
+    that.curMovement.start();
     
     /**
     console.log(movepaths); // this will show the info it in firebug console

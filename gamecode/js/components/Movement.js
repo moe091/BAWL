@@ -1,7 +1,7 @@
 //movement contains a list of movepaths and a char they belong to
 //it organizes animations into steps instead of paths for easier editing
 BAWL.Movement = function(parent, name) {
-    this.movePaths = [];
+    this.parent = parent;
     this.name = name;
     this.steps = [];
     this.curStep = null;
@@ -24,15 +24,24 @@ BAWL.Movement.prototype.start = function() {
 
 
 BAWL.Movement.prototype.update = function() {
-    this.elapsed+= game.time.elapsed; //update elapsed
-    
-    if (this.elapsed > this.nextStep.time) { //check if this step is over yet
-        this.endStep(); 
+    if (this.curStep != null && this.nextStep != null) {
+        this.elapsed+= game.time.elapsed; //update elapsed
+
+        if (this.elapsed > this.nextStep.time) { //check if this step is over yet
+            this.endStep(); 
+        }
+
+        //Update positions based on tRatio
+        this.tRatio = (this.elapsed - this.curStep.time) / (this.nextStep.time - this.curStep.time);
+        this.curStep.update(this.tRatio, this.nextStep);
+    } else {
+        console.warn("curStep or nextStep is null. curStep:");
+        console.log(this.curStep);
+        console.log("nextStep: ");
+        console.log(this.nextStep);
+        console.log("movement: " );
+        console.log(this);
     }
-    
-    //Update positions based on tRatio
-    this.tRatio = (this.elapsed - this.curStep.time) / (this.nextStep.time - this.curStep.time);
-    this.curStep.update(this.tRatio, this.nextStep);
     
     
 }
@@ -131,15 +140,7 @@ BAWL.Movement.prototype.jsonPositions = function(n) {
 
 
 BAWL.Movement.prototype.setStep = function(char, sNum) {
-    s = sNum;
-    console.log(s);
-    for (i in s.positions) {
-        s.positions[i].sprite.x = s.positions[i].sprite.offset.x = s.positions[i].x;
-        s.positions[i].sprite.y = s.positions[i].sprite.offset.y = s.positions[i].y;
-        s.positions[i].sprite.rotation = s.positions[i].sprite.offset.rotation = s.positions[i].rotation;
-        
-    }
-    console.log(s.positions[2].sprite);
+    this.parent.setPositions(sNum.positions);
 }
 
 BAWL.Movement.prototype.addPos = function(path, point) {

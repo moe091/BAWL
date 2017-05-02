@@ -11,21 +11,25 @@ sIndex: null,
 curPos: null,
     
 oldPos: null,
-    
+//__________________________________________ON / OFF _____________________________________\\
 editMode: function() {
     game.input.enabled = false;
     console.log("input disabled");
     this.aniEditor.style.backgroundColor = "#1a1a1a";
 
     this.populateChars(BAWL.gameWorld.chars);
+    updateEditorCallbacks();
 },
-
 unpause: function() {
     console.log("input enabled");
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
 },
 
+    
+    
+
+//__________________________________________POPULATE EDITOR___________________________________________\\
 populateChars: function(charList) {
     this.chars = charList;
     $("#charDropdown").html("");
@@ -53,6 +57,8 @@ populateTimeSteps: function() {
     
     if ($("#timestepDropdown").val() != -1)
         this.selectTimestep($("#timestepDropdown").val());
+    else
+        this.createStepEditor();
 },
     
 populateSprites: function() {
@@ -64,6 +70,11 @@ populateSprites: function() {
     
 
     
+    
+    
+    
+    
+//_____________________________________________________SELECTION UPDATES_________________________________________\\
 selectChar: function(c) {
     this.char = this.chars[c];
     this.populateMovements();
@@ -71,14 +82,8 @@ selectChar: function(c) {
     
 //BAWL.Movement. class that stores all movePaths of a specific movement(e.g 'walk')
 selectMovement: function(m) {
-    if (m == -1) {
-        console.log("WARNING: OLD CODE - THIS Isn't how new movements are created anymore");
-        //this.movement = new BAWL.Movement(this.char, prompt("Enter name for new movement: "));
-        //this.char.movements.push(this.movement);
-        //$("#movementDropdown").prepend('<option value='+i+'>'+ this.movement.name +'</option>');
-    } else {
-        this.movement = this.char.movements[0];
-    }
+    this.char.curMovement = this.char.movements[m];
+    this.movement = this.char.curMovement;
     this.populateTimeSteps();
 },
 
@@ -91,46 +96,26 @@ selectTimestep: function(t) {
         this.populateSprites();
     } else {
         console.log("TiMeStep is null");
+        console.log("t - " + t);
+        console.log(this.movement);
     }
 },
 
 selectSprite: function(s) {
-    console.log(this.tStep);
+    console.warn("-------------------selectSprite - REMOVING THIS---------------------");
 },
 
-log: function() {
-    console.log("old: ");
-    console.log(oldPos);
-    console.log("new: ");
-    console.log(this.tStep.positions[0]);
-},
-updateVals: function() {
-    var posi;
-    for (var i in this.tStep.positions) {
-        posi = this.tStep.positions[i];
-        $("#xVal-" + i).val(posi.x);
-        $("#yVal-" + i).val(posi.y);
-        $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
-        $("#durVal-" + i).val(posi.duration);
-    }
-},
     
-updatePosition: function() {
     
-    for (i in this.tStep.positions) {
-        this.tStep.positions[i].x = Number($("#xVal-" + i).val());
-        this.tStep.positions[i].y = Number($("#yVal-" + i).val());
-        this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
-    }
+
     
-    this.movement.setStep(this.char, this.tStep);
-    
-},
+
     
 setSpriteOffset(pos) {
     pos.sprite.offset.x = pos.x;
     pos.sprite.offset.y = pos.y;
     pos.sprite.offset.rotation = pos.rotation;
+    console.log("---------------setSpriteOffset - REMOVING THIS-----------------------------");
 },
     
 createStepEditor() {
@@ -139,7 +124,7 @@ createStepEditor() {
     sEditor.html("");
     var ps;
     var degrees;
-    for (var i = 0; i < this.movement.sprites.length; i++) {
+    for (var i in this.movement.sprites) {
         ps = this.movement.sprites[i];
         sEditor.append("<div id='coordEdit-" + i + "' " +  "class='editVal'>");//editVal div
             $("#coordEdit-" + i).append("<p class='cLabel'>" + ps.name + "</p>");//sprite label
@@ -164,9 +149,35 @@ createStepEditor() {
             $("#coordEdit-" + i).append("</span>");//close  value span Dur
         sEditor.append("</div>");
     }
-    //updateEditorCallbacks();
+    
+    
+    updateEditorCallbacks();
+},
+    
+updateVals: function() {
+    var posi;
+    for (var i in this.tStep.positions) {
+        posi = this.tStep.positions[i];
+        $("#xVal-" + i).val(posi.x);
+        $("#yVal-" + i).val(posi.y);
+        $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
+        $("#durVal-" + i).val(posi.duration);
+    }
 },
   
+updatePosition: function() {
+    
+    for (i in this.tStep.positions) {
+        this.tStep.positions[i].x = Number($("#xVal-" + i).val());
+        this.tStep.positions[i].y = Number($("#yVal-" + i).val());
+        this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
+    }
+    
+    this.movement.setStep(this.char, this.tStep);
+    
+},
+    
+    
 
 makeDownloadLink: function() {
     var data = "text/json;charset=utf-8," + encodeURIComponent(this.movement.jsonPositions($("#nameInput").val()));
@@ -190,9 +201,18 @@ newMovement: function() {
 },
   
 newStep: function() {
-    newStep = new BAWL.step(prompt("Enter time in MS for new step:"));
+    newStep = new BAWL.step(prompt("Enter time in MS for new step:"), this.movement);
     this.movement.steps.push(newStep);
     this.populateTimeSteps();
+},
+    
+addSprite: function() {
+    var i = Number($("#addSpriteOpt").val());
+    $("#selectBox option[value='option1']").remove();
+    
+    $("#addSpriteOpt option[value='" + i + "']").remove();
+    this.movement.sprites[i] = this.char.parts.children[i];
+    this.createStepEditor();
 },
 
 //when Add Sprite is clicked, display sprite dialog
@@ -205,10 +225,15 @@ createSpriteDialog: function() {
     //Populate Dialog with sprites of currently selected char
     $("#addSpriteOpt").html("");
     for (i in this.char.parts.children) {
-        $("#addSpriteOpt").append("<option value=" + i + ">" + this.char.parts.children[i].name + "</option>");
+        if (this.movement.sprites[i] == null) {
+            $("#addSpriteOpt").append("<option value=" + i + ">" + this.char.parts.children[i].name + "</option>");
+        }
     }
     
 },
+closeSpriteDialog: function() {
+    $("#spriteDialog").css("display", "none");
+}
 
 
     

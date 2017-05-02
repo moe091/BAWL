@@ -49,7 +49,7 @@ function updateEditorCallbacks() {
         function(data) {
             console.log("change: ");
             console.log(data.target.value);
-            //AnimationEditor.updatePosition();
+            AnimationEditor.updatePosition();
         }
     );
 }

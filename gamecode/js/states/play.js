@@ -46,6 +46,13 @@ BAWL.play = {
         } else {
             this.player.head.body.angularVelocity = 0;
         }
+        
+        if (this.wasd.f.isDown) {
+            if (this.player.punching == false) {
+                
+                this.player.doAnimation(1);
+            }
+        }
         this.player.update();
     },
     
@@ -66,10 +73,11 @@ BAWL.play = {
     
     createWASD: function() {
         this.wasd = {
-          up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-          down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-          left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-          right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+            up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+            down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+            left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+            right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+            f: game.input.keyboard.addKey(Phaser.Keyboard.F),
         };
     }
     

@@ -7,13 +7,22 @@ BAWL.Player = function(assetName, x, y) {
     this.moveKeys = {};
     this.movements = [];
     this.curMovement;
+    this.lastMovement;
+    this.punching = false;
     //this.loadAnimation();
     
     this.name = "Player";
     BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "punch1", this.loadAnimation, this);
+    this.curMovement = this.movements[0];
 }
 
-
+BAWL.Player.prototype.doAnimation = function(n) {
+    this.lastMovement = this.curMovement;
+    this.curMovement = this.movements[n];
+    this.curMovement.start();
+    this.punching = true; //TEMP - for testing
+}
 
 
 
@@ -33,7 +42,21 @@ BAWL.Player.prototype.update = function() {
             
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
+        console.log("BEGIN UPDATE - PLAYER");
+        console.log("LHAND X:");
+        console.log(this.lHand.x);
+        console.log("LHAND OFFSET X:");
+        console.log(this.lHand.offset.x);
+        console.log("UPDATING MOVEMENT...");
         this.curMovement.update();
+        console.log("lhand x: ");
+        console.log(this.lHand.x);
+        console.log("lhand offset x:");
+        console.log(this.lHand.offset.x);
+        console.log("movement step: ");
+        console.log(this.curMovement.curStep);
+        
+        console.log("END UPDATE - PLAYER");
     }
     
    
@@ -244,9 +267,13 @@ BAWL.Player.prototype.loadAnimation = function(save, that) {
     console.log("loaded movement. sprites:");
     console.log(movement);
     console.log(movement.sprites);
-    that.movements[0] = movement;
-    that.curMovement = movement;
+    that.movements[that.movements.length] = movement;
+    that.curMovement = that.movements[0];
     that.curMovement.start();
+    
+    if (that.movements.length >= 2) {
+        that.movements[1].repeat = false;
+    }
     
     /**
     console.log(movepaths); // this will show the info it in firebug console

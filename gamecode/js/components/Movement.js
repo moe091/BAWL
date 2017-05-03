@@ -12,6 +12,7 @@ BAWL.Movement = function(parent, name) {
     this.nextStep;
     this.elapsed = 0;
     this.tRatio = 0;
+    this.repeat = true;
     
 }
 
@@ -56,8 +57,16 @@ BAWL.Movement.prototype.endStep = function() {
     this.curStep = this.steps[this.step];
     if (this.step + 1 >= this.steps.length) {
         //if repeat = true;
-        this.nextStep = this.steps[0];
-        this.elapsed = 0;
+        if (this.repeat) {
+            this.nextStep = this.steps[0];
+            this.elapsed = 0;
+        } else {
+            console.log("ENDING STEP--------------------------------------- " + this.parent.lHand.offset.x);
+            this.parent.curMovement = this.parent.lastMovement;
+            this.parent.curMovement.start();
+            this.parent.curMovement.update();
+            console.warn(this.parent.curMovement.curStep);
+        }
     } else {
         this.nextStep = this.steps[this.step + 1];
     }

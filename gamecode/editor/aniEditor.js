@@ -21,6 +21,11 @@ editMode: function() {
     updateEditorCallbacks();
 },
 unpause: function() {
+    if (this.movement) {
+        this.movement.start();
+    } else {
+        console.log("unpausing - NO MOVEMENT");
+    }
     console.log("input enabled");
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
@@ -151,7 +156,7 @@ createStepEditor() {
     }
     
     
-    updateEditorCallbacks();
+    updateEditorCallbacks(); //calls updatePosition()
 },
     
 updateVals: function() {
@@ -166,13 +171,12 @@ updateVals: function() {
 },
   
 updatePosition: function() {
-    
+    console.log(this.tStep);
     for (i in this.tStep.positions) {
         this.tStep.positions[i].x = Number($("#xVal-" + i).val());
         this.tStep.positions[i].y = Number($("#yVal-" + i).val());
         this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
     }
-    
     this.movement.setStep(this.char, this.tStep);
     
 },
@@ -182,6 +186,7 @@ updatePosition: function() {
 makeDownloadLink: function() {
     var data = "text/json;charset=utf-8," + encodeURIComponent(this.movement.jsonPositions($("#nameInput").val()));
     console.log(data);
+    $("#aniBtns a").empty();
      $("#aniBtns").append("<a href='data:" + data + "' download='" + $("#nameInput").val() + ".json'>Download JSON</a>");
 },
     
@@ -201,7 +206,15 @@ newMovement: function() {
 },
   
 newStep: function() {
-    newStep = new BAWL.step(prompt("Enter time in MS for new step:"), this.movement);
+    newStep = new BAWL.step(Number(prompt("Enter time in MS for new step:")), this.movement);
+    for (var i in this.movement.sprites) {
+        console.log(i);
+        newStep.positions[i] = new Phaser.Point(0, 0);
+        newStep.positions[i].rotation = 0;
+        newStep.positions[i].sprite = this.movement.sprites[i];
+    }
+    console.log("newStep() - " );
+    console.log(newStep);
     this.movement.steps.push(newStep);
     this.populateTimeSteps();
 },
@@ -212,7 +225,10 @@ addSprite: function() {
     
     $("#addSpriteOpt option[value='" + i + "']").remove();
     this.movement.sprites[i] = this.char.parts.children[i];
+    this.movement.addSprite(this.char.parts.children[i]);
+    console.log(this.movement.sprites);
     this.createStepEditor();
+    this.updateVals();
 },
 
 //when Add Sprite is clicked, display sprite dialog

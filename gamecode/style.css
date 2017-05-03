@@ -14,7 +14,7 @@ body {
 
 #ani-editor {
     height: 760px;
-    width: 480px;
+    width: 620px;
     background-color: #000;
     border: 1px #ddd solid;
     border-radius: 3px;
@@ -30,11 +30,26 @@ body {
 /**---------------------------EDITOR CLASSES-----------------------------**/
 .compGroup {
     padding: 5px;
-    margin: 8px;
+    margin: 5px;
     background-color: #000;
     border: 1px #888 dashed;
     border-radius: 5px;
     display: inline-block;
+    float: left;
+    width: 410px;
+}
+
+.sidePanel {
+    float: right;
+    margin: 5px;
+    padding: 5px;
+    width: 160px;
+    height: 640px;
+    background-color: #000;
+    border: 1px #e2e2e2 solid;
+}
+.sidePanel button {
+    margin: 8px auto;
 }
 
 .valSpan {

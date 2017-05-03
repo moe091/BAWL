@@ -162,6 +162,41 @@ BAWL.Movement.prototype.addPos = function(path, point) {
     });
 }
 
+BAWL.Movement.prototype.addSprite = function(sprite) {
+    var n = Number(sprite.index);
+    this.sprites[n] = sprite;
+    for (i in this.steps) {
+        this.steps[i].positions[n] = new Phaser.Point(0, 0);
+        this.steps[i].positions[n].rotation = 0;
+    }
+    this.updatePosSprites();
+}
+
+BAWL.Movement.prototype.updatePosSprites = function() {
+    for (var i in this.steps) {
+        for (var j in this.sprites) {
+            if (this.steps[i].positions[j] == null) {
+                console.warn("updatePosSprites() - position " + j + " in step " + i + " is null");
+            } else {
+                if (this.steps[i].positions[j].sprite != null && this.steps[i].positions[j].sprite != this.sprites[j]) {
+                    console.warn("Switching sprite in step " + i + " position " + j + ".");
+                }
+                this.steps[i].positions[j].sprite = this.sprites[j];
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -169,7 +204,10 @@ BAWL.Movement.prototype.addPos = function(path, point) {
 BAWL.step = function(time, movement) {
     this.time = time;
     this.positions = []; //WARNING: POSITION INDEXES MUST REMAIN CONSTANT FOR ALL STEPS. i know...
-    
+    console.log("new step: ");
+    console.log(time);
+    console.log(movement);
+    console.log(this);
     if (movement != null) {
         this.movement = movement;
     } else {

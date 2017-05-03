@@ -38,8 +38,6 @@ $(document).ready(function(){
 function updateEditorCallbacks() {
     $(".pVal").change(
         function(data) {
-            console.log("change: ");
-            console.log(data.target.value);
             AnimationEditor.updatePosition();
             console.log("pval CHANGE-----");
         }
@@ -47,8 +45,6 @@ function updateEditorCallbacks() {
     
     $(".pVal").click(
         function(data) {
-            console.log("change: ");
-            console.log(data.target.value);
             AnimationEditor.updatePosition();
         }
     );

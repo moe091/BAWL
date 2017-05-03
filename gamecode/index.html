@@ -58,12 +58,11 @@
         
         <!------------------------EDITOR--------------------------->
         <div id="ani-editor" class="editor">
-            <div id="aniBtns">
-                <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
-                <button onclick = "AnimationEditor.makeDownloadLink()" id="btnDlLink">Generate Json</button>
-            </div>
+            
                 
-                
+
+            
+            
             <div class="compGroup">
                 
                 <div id="charSelect" class="editSelect">
@@ -109,12 +108,24 @@
                               <option value="mercedes">Mercedes</option>
                               <option value="audi">Audi</option>
                         </select>
-                        <button onclick="AnimationEditor.addSprite()">Add</button>
+                        <button onclick="AnimationEditor.addSprite()">Add</button><br>
                         <button onclick="AnimationEditor.closeSpriteDialog()">Close</button>
                     </div>
                 </div>
                 
             </div><!-- compGroup selectors -->
+            
+            
+            
+            <div class="sidePanel">
+                <div id="aniBtns">
+                    <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
+                    <button onclick = "AnimationEditor.makeDownloadLink()" id="btnDlLink">Generate Json</button>
+                </div>
+                <div class="btnGroup">
+                </div>
+            </div>
+            
             
             
             <div class="compGroup" id="stepEditor">
@@ -140,6 +151,8 @@
                 
                 
             </div>
+            
+            
             
             
         </div><!-- AniEditor -->

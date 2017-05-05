@@ -16,6 +16,7 @@ BAWL.Movement = function(parent, name) {
     
 }
 
+//_____________________________________MOVEMENT FUNCTIONS__________________________________________\\
 BAWL.Movement.prototype.start = function() {
     this.step = 0;
     this.elapsed = 0;
@@ -33,7 +34,15 @@ BAWL.Movement.prototype.update = function() {
         }
 
         //Update positions based on tRatio
+        console.log("elapsed: " + this.elapsed + " -curStepTime: " + this.curStep.time + " /(nextStepTime" + this.nextStep.time + " -curStepTime: " + this.curStep.time);
+        if (this.nextStep.time == this.curStep.time) {
+            console.log("updating cursteptime");
+            this.curStep.time++;
+            console.log("updated - " + this.curStep.time);
+        }
         this.tRatio = (this.elapsed - this.curStep.time) / (this.nextStep.time - this.curStep.time);
+        console.log("elapsed: " + this.elapsed + " -curStepTime: " + this.curStep.time + " /(nextStepTime" + this.nextStep.time + " -curStepTime: " + this.curStep.time);
+        console.log("ONE MOVEMENT UPDATE. TRATIO - " + this.tRatio);
         this.curStep.update(this.tRatio, this.nextStep);
     } else {
         console.warn("curStep or nextStep is null. curStep:");
@@ -61,92 +70,32 @@ BAWL.Movement.prototype.endStep = function() {
             this.nextStep = this.steps[0];
             this.elapsed = 0;
         } else {
-            console.log("ENDING STEP--------------------------------------- " + this.parent.lHand.offset.x);
-            this.parent.curMovement = this.parent.lastMovement;
-            this.parent.curMovement.start();
-            this.parent.curMovement.update();
-            console.warn(this.parent.curMovement.curStep);
+           this.endAniCallback();
         }
     } else {
         this.nextStep = this.steps[this.step + 1];
     }
 }
 
-
-BAWL.Movement.prototype.jsonPositions = function(n) {
-    if (n == null)
-        n = this.name;
-    
-    var save = {};
-    
-    save.name = n;
-    save.sprites = [];
-    for (var i in this.sprites) {
-        save.sprites[this.sprites[i].index] = this.sprites[i].name;
-    }
-    
-    save.steps = [];
-    for (var i in this.steps) {
-        var thisStep = {};
-        thisStep.time = this.steps[i].time;
-        save.steps[i] = thisStep;
-    }
-    
-    for (var i in save.steps) {
-        save.steps[i].positions = [];
-        for (var j in this.steps[i].positions) {
-            thisPos = {};
-            //thisPos.index = this.steps.positions[j] = p;
-            thisPos.time = this.steps[i].positions[j].time;
-            thisPos.spriteName = this.steps[i].positions[j].sprite.name;
-            thisPos.x = this.steps[i].positions[j].x;
-            thisPos.y = this.steps[i].positions[j].y;
-            thisPos.rotation = this.steps[i].positions[j].rotation;
-            //thisPos.duration = this.steps.positions[j].duration;
-            save.steps[i].positions[j] = thisPos;
-        
-        }
-    }
-    
-    console.log(save);
-    return JSON.stringify(save);
-    /**
-    var jsonPaths = [];
-    for (m in this.movePaths) { //each sprite has a path of positions
-        var path = {};
-        path.index = m;
-        path.spriteName = this.movePaths[m].sprite.name;
-        path.defaultX = this.movePaths[m].default.x;
-        path.defaultY = this.movePaths[m].default.y;
-        path.defaultRot = this.movePaths[m].default.rotation;
-        path.movementName = this.movePaths[m].movement.name;
-        path.parentName = this.movePaths[m].parent.name;
-        path.positions = [];
-        for (p in this.movePaths[m].positions) {
-            var pos = this.movePaths[m].positions[p];
-            var jPos = {};
-            
-            jPos.index = p;
-            jPos.time = pos.time;
-            jPos.spriteName = pos.sprite.name;
-            jPos.x = pos.x;
-            jPos.y = pos.y;
-            jPos.rotation = pos.rotation;
-            jPos.duration = pos.duration;
-            path.positions.push(jPos);
-            
-            
-        }
-        jsonPaths.push(path);
-    }
-    console.log(jsonPaths);
-    return JSON.stringify(jsonPaths);
-    **/
+BAWL.Movement.prototype.endAniCallback = function() {
+    this.parent.curMovement = this.parent.lastMovement;
+    this.parent.curMovement.lastStep = this.curStep;
+    this.parent.curMovement.start();
+    this.parent.curMovement.update();
+    this.nextStep = this.steps[0];
+    this.parent.punching = false;
 }
 
 
 
 
+
+
+
+
+
+
+//_____________________________________________SETUP__________________________________________________\\
 
 BAWL.Movement.prototype.setStep = function(char, sNum) {
     this.parent.setPositions(sNum.positions);
@@ -202,7 +151,61 @@ BAWL.Movement.prototype.updatePosSprites = function() {
 
 
 
+//__________________________________________SAVING________________________________________________\\
 
+BAWL.Movement.prototype.jsonPositions = function(n) {
+    if (n == null)
+        n = this.name;
+    
+    var save = {};
+    
+    save.name = n;
+    save.sprites = [];
+    for (var i in this.sprites) {
+        save.sprites[this.sprites[i].index] = this.sprites[i].name;
+    }
+    
+    save.steps = [];
+    for (var i in this.steps) {
+        var thisStep = {};
+        thisStep.time = this.steps[i].time;
+        save.steps[i] = thisStep;
+    }
+    
+    for (var i in save.steps) {
+        save.steps[i].positions = [];
+        for (var j in this.steps[i].positions) {
+            thisPos = {};
+            //thisPos.index = this.steps.positions[j] = p;
+            thisPos.time = this.steps[i].positions[j].time;
+            thisPos.spriteName = this.steps[i].positions[j].sprite.name;
+            thisPos.x = this.steps[i].positions[j].x;
+            thisPos.y = this.steps[i].positions[j].y;
+            thisPos.rotation = this.steps[i].positions[j].rotation;
+            //thisPos.duration = this.steps.positions[j].duration;
+            save.steps[i].positions[j] = thisPos;
+        
+        }
+    }
+    
+    console.log(save);
+    return JSON.stringify(save);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//________________________________________________STEP___________________________________________\\
 
 
 
@@ -227,13 +230,18 @@ BAWL.step = function(time, movement) {
 
 //update sprites in each position for this sprite based on tRatio and next step positions
 BAWL.step.prototype.update = function(tRatio, nextStep) {
-    for (i in this.positions) {
+    console.log("step update: " + this.positions[1].sprite.offset.x);
+    console.log(this.tRatio);
+    for (var i in this.positions) {
         if (nextStep.positions[i] != null) {
             this.positions[i].sprite.offset.x = this.positions[i].x + (tRatio * (nextStep.positions[i].x - this.positions[i].x));
             this.positions[i].sprite.offset.y = this.positions[i].y + (tRatio * (nextStep.positions[i].y - this.positions[i].y));
             this.positions[i].sprite.offset.rotation = this.positions[i].rotation + (tRatio * (nextStep.positions[i].rotation - this.positions[i].rotation));
         }
     }
+    console.log("after update: " + this.positions[1].sprite.offset.x);
+    console.log(this);
+    
 }
 
 

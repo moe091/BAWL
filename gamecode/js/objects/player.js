@@ -42,19 +42,7 @@ BAWL.Player.prototype.update = function() {
             
             this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
         }
-        console.log("BEGIN UPDATE - PLAYER");
-        console.log("LHAND X:");
-        console.log(this.lHand.x);
-        console.log("LHAND OFFSET X:");
-        console.log(this.lHand.offset.x);
-        console.log("UPDATING MOVEMENT...");
         this.curMovement.update();
-        console.log("lhand x: ");
-        console.log(this.lHand.x);
-        console.log("lhand offset x:");
-        console.log(this.lHand.offset.x);
-        console.log("movement step: ");
-        console.log(this.curMovement.curStep);
         
         console.log("END UPDATE - PLAYER");
     }
@@ -64,17 +52,18 @@ BAWL.Player.prototype.update = function() {
 
 BAWL.Player.prototype.changePos = function(tStep) {
     if (false) {
-    console.log("player changePos():");
-    for (var j = 0; j < tStep.positions.length; j++) {
-        tStep.positions[j].sprite.offset.x = tStep.positions[j].x;
-        tStep.positions[j].sprite.offset.y = tStep.positions[j].y;
-        tStep.positions[j].sprite.offset.rotation = tStep.positions[j].rotation;
-    }
-    for (var i = 0; i < this.parts.children.length; i++) {
-        this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
-        this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
-        this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
-    }
+        console.log("player changePos():");
+        console.log(tStep);
+        for (var j = 0; j < tStep.positions.length; j++) {
+            tStep.positions[j].sprite.offset.x = tStep.positions[j].x;
+            tStep.positions[j].sprite.offset.y = tStep.positions[j].y;
+            tStep.positions[j].sprite.offset.rotation = tStep.positions[j].rotation;
+        }
+        for (var i = 0; i < this.parts.children.length; i++) {
+            this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
+            this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
+            this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
+        }
     }
 }
 
@@ -241,6 +230,9 @@ BAWL.Player.prototype.loadAnimation = function(save, that) {
     }
     for (var i in save.steps) {
         i = Number(i);
+        if (save.steps[i].time == 250 || save.steps[i].time == 500) {
+            save.steps[i].time = save.steps[i].time / 2;
+        }
         var step = new BAWL.step(save.steps[i].time, movement);
         
         for (var j in save.steps[i].positions) {

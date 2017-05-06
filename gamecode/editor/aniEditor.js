@@ -249,6 +249,16 @@ createSpriteDialog: function() {
 },
 closeSpriteDialog: function() {
     $("#spriteDialog").css("display", "none");
+},
+    
+    
+    
+    
+    
+    
+    
+copyPositions: function() {
+    
 }
 
 

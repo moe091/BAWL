@@ -66,7 +66,7 @@
             <div class="compGroup">
                 
                 <div id="charSelect" class="editSelect">
-                    <label>Select a Character: </label>
+                    <label>Select Char: </label>
                     <select id="charDropdown" class="editDD">
                         <!-- populated by AnimationEditor.populateChars(chars) -->
                     </select>
@@ -74,7 +74,7 @@
                 
                 
                 <div id="movementSelect" class="editSelect">
-                    <label>Select a Movement: </label>
+                    <label>Select Movement: </label>
                     <select id="movementDropdown" class="editDD">
                         <!-- populated populateMovements -->
                     </select>
@@ -121,6 +121,8 @@
                 <div id="aniBtns">
                     <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
                     <button onclick = "AnimationEditor.makeDownloadLink()" id="btnDlLink">Generate Json</button>
+                    
+                        <button onclick = "AnimationEditor.copyPositions()" id="copyPosBtn">Copy Positions</button>
                 </div>
                 <div class="btnGroup">
                 </div>

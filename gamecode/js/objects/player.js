@@ -13,7 +13,7 @@ BAWL.Player = function(assetName, x, y) {
     
     this.name = "Player";
     BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
-    BAWL.loader.loadAnimation("player", "punch1", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "punch2", this.loadAnimation, this);
     this.curMovement = this.movements[0];
 }
 
@@ -222,16 +222,16 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 //Eventually load these from json file
 //create animations by hand for now
 //TODO: create an editor that either exports JSON or generates code to setup animations
-BAWL.Player.prototype.loadAnimation = function(save, that) {
-    
-    var movement = new BAWL.Movement(that, "walk");
+BAWL.Player.prototype.loadAnimation = function(save, that, name) {
+    save.name = name;
+    var movement = new BAWL.Movement(that, save.name);
     for (var i in save.sprites) {
         movement.sprites[Number(that.getSpriteByName(save.sprites[i]).index)] = that.getSpriteByName(save.sprites[i]);
     }
     for (var i in save.steps) {
         i = Number(i);
         if (save.steps[i].time == 250 || save.steps[i].time == 500) {
-            save.steps[i].time = save.steps[i].time / 2;
+            //save.steps[i].time = save.steps[i].time / 2;
         }
         var step = new BAWL.step(save.steps[i].time, movement);
         

@@ -1,6 +1,6 @@
 
 var AnimationEditor = {
-
+paused: false,
     
 aniEditor: null,
 chars: null,  
@@ -14,7 +14,8 @@ oldPos: null,
 //__________________________________________ON / OFF _____________________________________\\
 editMode: function() {
     game.input.enabled = false;
-    console.log("input disabled");
+    this.paused = true;
+    
     this.aniEditor.style.backgroundColor = "#1a1a1a";
 
     this.populateChars(BAWL.gameWorld.chars);
@@ -26,7 +27,8 @@ unpause: function() {
     } else {
         console.log("unpausing - NO MOVEMENT");
     }
-    console.log("input enabled");
+    
+    this.paused = false;
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
 },
@@ -155,8 +157,7 @@ createStepEditor() {
         sEditor.append("</div>");
     }
     
-    
-    updateEditorCallbacks(); //calls updatePosition()
+    updateEditorCallbacks();
 },
     
 updateVals: function() {
@@ -168,6 +169,8 @@ updateVals: function() {
         $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
         $("#durVal-" + i).val(posi.duration);
     }
+    console.log("update vals:");
+    console.log(this.tStep);
 },
   
 updatePosition: function() {
@@ -259,6 +262,60 @@ closeSpriteDialog: function() {
     
 copyPositions: function() {
     
+    $(".cPosOpt").css("display", "none");
+    console.log($(".cPosOpt"));
+},
+
+copyPosMenu: function() {
+    $(".cPosOpt").css("display", "inline-block");
+    
+    $("#cPosMoveOpt").html("");
+    for (var i in this.char.movements) {
+        $("#cPosMoveOpt").append("<option value=" + Number(i) + ">" + this.char.movements[i].name + "</option>");
+    }
+},
+    
+copyMoveSelect: function(v) {
+    
+    $("#cPosStepOpt").html("");
+    for (var i in this.char.movements[v].steps) {
+        $("#cPosStepOpt").append("<option value=" + i + ">" + this.char.movements[v].steps[i].time + "</option>");
+    }
+},
+    
+copyStepSelect: function(v) {
+
+},
+    
+copyPosClick: function() {
+    
+    var s = this.char.movements[Number($("#cPosMoveOpt").val())].steps[Number($("#cPosStepOpt").val())];
+    
+    if (this.movement != null) {
+        for (var i in s.movement.sprites) {
+            if (this.movement.sprites[i] == null) {
+                this.movement.addSprite(s.movement.sprites[i]);
+            }
+        }
+    } else {
+        console.warn("copyStepSelect() - this.movement is null!");
+    }
+    
+    if (this.tStep != null) {
+        for (var i in s.positions) {
+            if (this.tStep.positions[i].sprite != s.positions[i].sprite) {
+                console.warn("copyStepSelect() - sprites in position " + i + " do not match!");
+            } else {
+                this.tStep.positions[i].x = s.positions[i].x;
+                this.tStep.positions[i].y = s.positions[i].y;
+                this.tStep.positions[i].rotation = s.positions[i].rotation;
+            }
+        }
+    } else {
+        console.warn("copyStepSelect() - tStep is null!");
+    }
+    
+    this.updateVals();
 }
 
 

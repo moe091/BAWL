@@ -121,8 +121,22 @@
                 <div id="aniBtns">
                     <button onclick = "AnimationEditor.editMode()" id="btnAniEditor">Edit</button>
                     <button onclick = "AnimationEditor.makeDownloadLink()" id="btnDlLink">Generate Json</button>
-                    
-                        <button onclick = "AnimationEditor.copyPositions()" id="copyPosBtn">Copy Positions</button>
+                    <div id="copPosDiv" class="btnGroupDiv">
+                        <button onclick = "AnimationEditor.copyPosMenu()" id="copyPosBtn">Copy Positions</button>
+                        <div id="copyOptionsDiv" class="optGroupDiv cPosOpt">
+                            <select id="cPosMoveOpt" class="groupOpt cPosOpt">
+                            
+                            </select>
+                            <br>
+                            <select id="cPosStepOpt" class="groupOpt cPosOpt">
+                                <option>---</option>
+                            </select>
+                            <br>
+                            <button onclick="AnimationEditor.copyPosClick()" class="cPosOpt">Copy</button>
+                        </div>
+                        
+                        
+                    </div>
                 </div>
                 <div class="btnGroup">
                 </div>

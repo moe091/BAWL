@@ -150,6 +150,25 @@ input[type=number]::-webkit-inner-spin-button {
 
 
 
+/****************************************************PANEL BUTTONS*************************************/
+
+.optGroupDiv {
+    width: 90%;
+    margin: 0 auto;
+    background-color: #4a4a4a;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px white solid;
+    padding: 5px;
+    display: none;
+}
+.cPosOpt {
+    display: none;
+}
+
+
+
+
 
 
 

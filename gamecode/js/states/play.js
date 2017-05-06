@@ -18,39 +18,49 @@ BAWL.play = {
     
     update: function() {
         this.player.setZeroVelocity();
-
-        if (this.wasd.up.isDown) {
-            this.player.moveUp(450);
-            //this.player.head.body.velocity = new Phaser.Point(0, -300);
-        } else if (this.wasd.down.isDown) {
-            this.player.moveDown(450);
-        }
-
-        if (this.wasd.left.isDown) {
+        
+        if (!AnimationEditor.paused) {
             if (this.wasd.up.isDown) {
-                this.player.moveUpLeft(450);
+                this.player.moveUp(450);
+                //this.player.head.body.velocity = new Phaser.Point(0, -300);
             } else if (this.wasd.down.isDown) {
-                this.player.moveDownLeft(450);
-            } else {
-                this.player.moveLeft(450);
+                this.player.moveDown(450);
             }
-            
-        } else if (this.wasd.right.isDown) {
-            if (this.wasd.up.isDown) {
-                this.player.moveUpRight(450);
-            } else if (this.wasd.down.isDown) {
-                this.player.moveDownRight(450);
+
+            if (this.wasd.left.isDown) {
+                if (this.wasd.up.isDown) {
+                    this.player.moveUpLeft(450);
+                } else if (this.wasd.down.isDown) {
+                    this.player.moveDownLeft(450);
+                } else {
+                    this.player.moveLeft(450);
+                }
+
+            } else if (this.wasd.right.isDown) {
+                if (this.wasd.up.isDown) {
+                    this.player.moveUpRight(450);
+                } else if (this.wasd.down.isDown) {
+                    this.player.moveDownRight(450);
+                } else {
+                    this.player.moveRight(450);
+                }
             } else {
-                this.player.moveRight(450);
+                this.player.head.body.angularVelocity = 0;
+            }
+
+            if (this.wasd.f.isDown) {
+                if (this.player.punching == false) {
+
+                    this.player.doAnimation(1);
+                }
             }
         } else {
-            this.player.head.body.angularVelocity = 0;
-        }
-        
-        if (this.wasd.f.isDown) {
-            if (this.player.punching == false) {
-                
-                this.player.doAnimation(1);
+            if (this.wasd.up.isDown) {
+                //ADD OPTION IN AniEditor UI TO SELECT BODY PART.
+                //MOVE THE SELECTED BODY PART UP
+                //IF SHIFT IS HELD, MOVE IT IN INCREMENTS OF 5
+                //IF ALT IS HELD, ROTATE INSTEAD
+                //IF CTROL IS HELD, ROTATE BACKWARDS 
             }
         }
         this.player.update();

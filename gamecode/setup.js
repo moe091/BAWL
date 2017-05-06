@@ -31,6 +31,21 @@ $(document).ready(function(){
     );
     
     updateEditorCallbacks();
+    
+    
+    
+    //____________________________________COPY STEP OPTIONS____________________________________\\
+    $("#cPosMoveOpt").change(
+        function() {
+            AnimationEditor.copyMoveSelect($("#cPosMoveOpt").val());
+        }
+    );
+    
+    $("#cPosStepOpt").change(
+        function() {
+            AnimationEditor.copyStepSelect($("#cPosStepOpt").val());
+        }
+    );
 
     
 });

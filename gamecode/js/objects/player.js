@@ -14,6 +14,7 @@ BAWL.Player = function(assetName, x, y) {
     this.name = "Player";
     BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
     BAWL.loader.loadAnimation("player", "punch2", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "spinAtk", this.loadAnimation, this);
     this.curMovement = this.movements[0];
 }
 
@@ -224,6 +225,7 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 //TODO: create an editor that either exports JSON or generates code to setup animations
 BAWL.Player.prototype.loadAnimation = function(save, that, name) {
     save.name = name;
+    console.log("NAME: " + save.name);
     var movement = new BAWL.Movement(that, save.name);
     for (var i in save.sprites) {
         movement.sprites[Number(that.getSpriteByName(save.sprites[i]).index)] = that.getSpriteByName(save.sprites[i]);

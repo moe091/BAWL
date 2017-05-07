@@ -13,7 +13,9 @@ curPos: null,
 oldPos: null,
 //__________________________________________ON / OFF _____________________________________\\
 editMode: function() {
-    game.input.enabled = false;
+    if ($("#inputRad").val(":checked") == false) {
+        game.input.enabled = false;
+    }
     this.paused = true;
     
     this.aniEditor.style.backgroundColor = "#1a1a1a";
@@ -27,7 +29,7 @@ unpause: function() {
     } else {
         console.log("unpausing - NO MOVEMENT");
     }
-    
+    console.log($("#inputRad").val());
     this.paused = false;
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
@@ -131,6 +133,8 @@ createStepEditor() {
     sEditor.html("");
     var ps;
     var degrees;
+    
+    sEditor.append("<input type='radio' name='spriteRad' value=-1 id='inputRad'> None");
     for (var i in this.movement.sprites) {
         ps = this.movement.sprites[i];
         sEditor.append("<div id='coordEdit-" + i + "' " +  "class='editVal'>");//editVal div
@@ -150,13 +154,12 @@ createStepEditor() {
                 $(".r.valSpan-" + i).append("<input type='number' id='rotVal-" + i + "' class='pVal editInputLN'>");
             $("#coordEdit-" + i).append("</span>");//close  value span Rot
         
-            $("#coordEdit-" + i).append("<span class='d valSpan valSpan-" + i + "'>");//value span X
-                $(".d.valSpan-" + i).append("<label>Dur: </label>");
-                $(".d.valSpan-" + i).append("<input type='number' id='durVal-" + i + "' class='pVal editInputN'>");
-            $("#coordEdit-" + i).append("</span>");//close  value span Dur
+            $("#coordEdit-" + i).append("<span class='spriteRadSpan radSpan-" + i + "'>");
+                $(".radSpan-" + i).append("<input type='radio' name='spriteRad' value=" + i + ">" + ps.name);
+            $("#coordEdit-" + i).append("</span>");
         sEditor.append("</div>");
+        
     }
-    
     updateEditorCallbacks();
 },
     

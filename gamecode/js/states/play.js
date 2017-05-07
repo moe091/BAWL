@@ -61,6 +61,7 @@ BAWL.play = {
                 //IF SHIFT IS HELD, MOVE IT IN INCREMENTS OF 5
                 //IF ALT IS HELD, ROTATE INSTEAD
                 //IF CTROL IS HELD, ROTATE BACKWARDS 
+                console.log("UP");
             }
         }
         this.player.update();

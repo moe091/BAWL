@@ -34,15 +34,10 @@ BAWL.Movement.prototype.update = function() {
         }
 
         //Update positions based on tRatio
-        console.log("elapsed: " + this.elapsed + " -curStepTime: " + this.curStep.time + " /(nextStepTime" + this.nextStep.time + " -curStepTime: " + this.curStep.time);
         if (this.nextStep.time == this.curStep.time) {
-            console.log("updating cursteptime");
             this.curStep.time++;
-            console.log("updated - " + this.curStep.time);
         }
         this.tRatio = (this.elapsed - this.curStep.time) / (this.nextStep.time - this.curStep.time);
-        console.log("elapsed: " + this.elapsed + " -curStepTime: " + this.curStep.time + " /(nextStepTime" + this.nextStep.time + " -curStepTime: " + this.curStep.time);
-        console.log("ONE MOVEMENT UPDATE. TRATIO - " + this.tRatio);
         this.curStep.update(this.tRatio, this.nextStep);
     } else {
         console.warn("curStep or nextStep is null. curStep:");
@@ -216,10 +211,6 @@ BAWL.Movement.prototype.jsonPositions = function(n) {
 BAWL.step = function(time, movement) {
     this.time = time;
     this.positions = []; //WARNING: POSITION INDEXES MUST REMAIN CONSTANT FOR ALL STEPS. i know...
-    console.log("new step: ");
-    console.log(time);
-    console.log(movement);
-    console.log(this);
     if (movement != null) {
         this.movement = movement;
     } else {
@@ -230,8 +221,6 @@ BAWL.step = function(time, movement) {
 
 //update sprites in each position for this sprite based on tRatio and next step positions
 BAWL.step.prototype.update = function(tRatio, nextStep) {
-    console.log("step update: " + this.positions[1].sprite.offset.x);
-    console.log(this.tRatio);
     for (var i in this.positions) {
         if (nextStep.positions[i] != null) {
             this.positions[i].sprite.offset.x = this.positions[i].x + (tRatio * (nextStep.positions[i].x - this.positions[i].x));
@@ -239,8 +228,6 @@ BAWL.step.prototype.update = function(tRatio, nextStep) {
             this.positions[i].sprite.offset.rotation = this.positions[i].rotation + (tRatio * (nextStep.positions[i].rotation - this.positions[i].rotation));
         }
     }
-    console.log("after update: " + this.positions[1].sprite.offset.x);
-    console.log(this);
     
 }
 

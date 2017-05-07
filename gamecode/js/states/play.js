@@ -9,6 +9,7 @@ BAWL.play = {
         
         this.loadMap();
         this.createWASD();
+        AnimationEditor.createWASD(); //NOTE - EDITOR CODE
         
         this.player = new BAWL.Player('char1', 1500, 1800);
         BAWL.gameWorld.addChar(this.player);
@@ -53,16 +54,13 @@ BAWL.play = {
 
                     this.player.doAnimation(1);
                 }
+            } else if (this.wasd.ONE.isDown) {
+                if (this.player.punching == false) {
+                    this.player.doAnimation(2);
+                }
             }
         } else {
-            if (this.wasd.up.isDown) {
-                //ADD OPTION IN AniEditor UI TO SELECT BODY PART.
-                //MOVE THE SELECTED BODY PART UP
-                //IF SHIFT IS HELD, MOVE IT IN INCREMENTS OF 5
-                //IF ALT IS HELD, ROTATE INSTEAD
-                //IF CTROL IS HELD, ROTATE BACKWARDS 
-                console.log("UP");
-            }
+            AnimationEditor.update(); //NOTE - EDITOR CODE
         }
         this.player.update();
     },
@@ -89,6 +87,7 @@ BAWL.play = {
             left: game.input.keyboard.addKey(Phaser.Keyboard.A),
             right: game.input.keyboard.addKey(Phaser.Keyboard.D),
             f: game.input.keyboard.addKey(Phaser.Keyboard.F),
+            ONE: game.input.keyboard.addKey(Phaser.Keyboard.ONE),
         };
     }
     

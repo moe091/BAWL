@@ -3,6 +3,7 @@
 
 BAWL.Player = function(assetName, x, y) {
     this.createBodyParts(assetName, x, y);
+    this.head.body.fixedRotation = true;
     
     this.moveKeys = {};
     this.movements = [];
@@ -15,41 +16,62 @@ BAWL.Player = function(assetName, x, y) {
     BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
     BAWL.loader.loadAnimation("player", "punch1", this.loadAnimation, this);
     BAWL.loader.loadAnimation("player", "whirlwind", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "icewall", this.loadAnimation, this);
     this.curMovement = this.movements[0];
 }
+
+
+//________________________________________ACTIONS________________________________\\
+BAWL.Player.prototype.doCast = function(name) {
+    if (name == "icewall") {
+        BAWL.spells.icewall(this);
+    }
+}
+
 
 BAWL.Player.prototype.doAnimation = function(n) {
     this.lastMovement = this.curMovement;
     this.curMovement = this.movements[n];
-    console.log(this.curMovement);
     this.curMovement.start();
     this.punching = true; //TEMP - for testing
 }
 
 
 
-BAWL.Player.prototype.update = function() {
-    this.head.rotation = game.physics.arcade.angleToPointer(this.head) + Math.PI / 2; //rotate head to face cursor. All body positions/rotations are based off head  
-    if (this.moving) {
-        for (var i = 0; i < this.parts.children.length; i++) {
-            //update body parts relative to head based on their position/rotation offsets(updated by movement paths)
-            this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
-            this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
-            this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
 
-            //update movement paths for all body parts that have one
-            if (this.parts.children[i].movement != null) {
-                
-            }
-            
-            this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.
+//_____________________________________UPDATE________________________________________\\
+
+BAWL.Player.prototype.update = function() {
+    this.head.body.rotation = game.physics.arcade.angleToPointer(this.head) + Math.PI / 2; //rotate head to face cursor. All body positions/rotations are based off head 
+    this.head.rotation = this.head.body.rotation;
+    this.updateRotation();
+    
+    for (var i = 0; i < this.parts.children.length; i++) {
+        //update body parts relative to head based on their position/rotation offsets(updated by movement paths)
+        this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
+        this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
+        this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
+
+        //update movement paths for all body parts that have one
+        if (this.parts.children[i].movement != null) {
+
         }
-        this.curMovement.update();
-        
+
+        this.parts.children[i].body.velocity = this.head.body.velocity; //set body part velocities to head vel, otherwise heads position is ahead of body parts by 1 frame when rendered.    
     }
     
+    if (this.punching || this.moving) {
+        this.curMovement.update();
+    }
    
+},
+    
+BAWL.Player.prototype.updateRotation = function() {
+    
 }
+    
+    
+    
 
 BAWL.Player.prototype.changePos = function(tStep) {
     if (false) {
@@ -75,43 +97,63 @@ BAWL.Player.prototype.changePos = function(tStep) {
 
 //___________________________MOTION____________________________\\
 BAWL.Player.prototype.setZeroVelocity = function() {
-    this.head.body.velocity.setTo(0, 0);
+    //this.head.body.velocity.setTo(0, 0);
+    this.head.body.setZeroVelocity();
     this.moving = false;
 }
 
 
 BAWL.Player.prototype.moveUp = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 90, val, this.head.body.velocity);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 90, val, this.head.body.velocity);
+    this.head.body.velocity.y = Math.sin(this.head.rotation - (Math.PI / 2)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation - (Math.PI / 2)) * val;
     this.moving = true;
 }
 BAWL.Player.prototype.moveDown = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 90, -val, this.head.body.velocity);
+    val = -val;
+    this.head.body.velocity.y = Math.sin(this.head.rotation - (Math.PI / 2)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation - (Math.PI / 2)) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 90, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 180, -val, this.head.body.velocity);
+    this.head.body.velocity.y = Math.sin(this.head.rotation) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 180, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle, -val, this.head.body.velocity);
+    val = -val;
+    this.head.body.velocity.y = Math.sin(this.head.rotation) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle, -val, this.head.body.velocity);
     this.moving = true;
 }
 
 //diagonal directions need their own function because it's the simplest way to combine 2 directions while using arcade.velocityFromAngle()
 BAWL.Player.prototype.moveUpLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle + 45, -val, this.head.body.velocity);
+    val = -val;
+    this.head.body.velocity.y = Math.sin(this.head.rotation + (Math.PI / 4)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation + (Math.PI / 4)) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle + 45, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveDownLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 45, -val, this.head.body.velocity);
+    this.head.body.velocity.y = Math.sin(this.head.rotation - (Math.PI * 1.25)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation - (Math.PI * 1.25)) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 45, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveUpRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 45, val, this.head.body.velocity);
+    this.head.body.velocity.y = Math.sin(this.head.rotation - (Math.PI / 4)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation - (Math.PI / 4)) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 45, val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveDownRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 135, -val, this.head.body.velocity);
+    this.head.body.velocity.y = Math.sin(this.head.rotation + (Math.PI / 4)) * val;
+    this.head.body.velocity.x = Math.cos(this.head.rotation + (Math.PI / 4)) * val;
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 135, -val, this.head.body.velocity);
     this.moving = true;
 }
 
@@ -198,7 +240,7 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
     this.head.name = "head";
     this.head.anchor.setTo(0.5); 
     this.head.offset = new Phaser.Point(0, 0);
-    game.physics.arcade.enable(this.head);
+    game.physics.p2.enable(this.head);
 
     for (i in this.parts.children) {
         this.parts.children[i].index = i;
@@ -226,6 +268,7 @@ BAWL.Player.prototype.loadAnimation = function(save, that, name) {
     var movement = new BAWL.Movement(that, save.name);
     for (var i in save.sprites) {
         movement.sprites[Number(that.getSpriteByName(save.sprites[i]).index)] = that.getSpriteByName(save.sprites[i]);
+        movement.char = that;
     }
     for (var i in save.steps) {
         i = Number(i);
@@ -249,14 +292,23 @@ BAWL.Player.prototype.loadAnimation = function(save, that, name) {
         }
         
         movement.steps.push(step);
+        
     }
+    
+    movement.steps.sort(function(a, b) {
+        return a.time - b.time;
+    });
+    
     that.movements[that.movements.length] = movement;
     that.curMovement = that.movements[0];
     that.curMovement.start();
     
-    if (that.movements.length >= 3) {
+    if (that.movements.length >= 4) {
         that.movements[1].repeat = false;
         that.movements[2].repeat = false;
+        that.movements[3].repeat = false;
+        
+        that.movements[3].steps[0].action = "icewall";
     }
     
     /**
@@ -372,9 +424,22 @@ BAWL.Player.prototype.setPositions = function(ps) {
         ps[i].sprite.x = this.head.x + Math.sin(this.head.rotation) * -ps[i].y + Math.cos(this.head.rotation) * ps[i].x;
         ps[i].sprite.y = this.head.y + Math.cos(this.head.rotation) * ps[i].y + Math.sin(this.head.rotation) * ps[i].x;
     }  
-    
-    
 }
+    
+    
+    
+//___________________________________UTILITY_____________________________________\\
+    
+BAWL.Player.prototype.getPoint = function(x, y, rot) {
+    this.parts.children[i].rotation = this.head.rotation + this.parts.children[i].offset.rotation;
+        this.parts.children[i].x = this.head.x + Math.sin(this.head.rotation) * -this.parts.children[i].offset.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.x;
+        this.parts.children[i].y = this.head.y + Math.cos(this.head.rotation) * this.parts.children[i].offset.y + Math.sin(this.head.rotation) * this.parts.children[i].offset.x;
+    
+    var point = new Phaser.Point(this.head.x + Math.sin(this.head.rotation) * -y + Math.cos(this.head.rotation) * x, this.head.y + Math.cos(this.head.rotation) * y + Math.sin(this.head.rotation) * x);
+    point.rotation = this.head.rotation;
+    return point;
+}
+    
 
 
 

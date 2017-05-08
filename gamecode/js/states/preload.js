@@ -2,6 +2,7 @@ BAWL = {}
 BAWL.load = {
     preload: function() {
         this.loadChar();
+        this.loadSpells();
         game.load.tilemap('testmap', '../../maps/testmap.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('hyp1', '../../maps/hyp1.png');
         game.load.image('hyp2', '../../maps/hyp2.png');
@@ -21,6 +22,10 @@ BAWL.load = {
         game.load.image('char1_hand', '../../assets/chars/char1_s_hand.png');
         game.load.image('char1_bod', '../../assets/chars/char1_s_bod.png');
         game.load.image('char1_foot', '../../assets/chars/char1_s_foot.png');
+    },
+    
+    loadSpells: function() {
+        game.load.spritesheet('icewall', '../../assets/spells/icewall.png', 193, 45);
     }
     
 

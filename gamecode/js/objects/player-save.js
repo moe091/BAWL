@@ -12,7 +12,7 @@ BAWL.Player = function(assetName, x, y) {
 
 
 BAWL.Player.prototype.update = function() {
-    this.head.rotation = game.physics.arcade.angleToPointer(this.head) + Math.PI / 2; //rotate head to face cursor. All body positions/rotations are based off head
+    this.head.rotation = game.physics.p2.angleToPointer(this.head) + Math.PI / 2; //rotate head to face cursor. All body positions/rotations are based off head
     console.log(this.moving);
     if (this.moving) {
         for (var i = 0; i < this.parts.children.length; i++) {
@@ -50,37 +50,49 @@ BAWL.Player.prototype.setZeroVelocity = function() {
 
 
 BAWL.Player.prototype.moveUp = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 90, val, this.head.body.velocity);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 90, val, this.head.body.velocity);
+    this.head.body.moveUp(val);
     this.moving = true;
 }
 BAWL.Player.prototype.moveDown = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 90, -val, this.head.body.velocity);
+    this.head.body.moveDown(val);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 90, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 180, -val, this.head.body.velocity);
+    this.head.body.moveRight(val);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 180, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle, -val, this.head.body.velocity);
+    this.head.body.moveLeft(val);
+    //game.physics.arcade.velocityFromAngle(this.head.angle, -val, this.head.body.velocity);
     this.moving = true;
 }
 
 //diagonal directions need their own function because it's the simplest way to combine 2 directions while using arcade.velocityFromAngle()
 BAWL.Player.prototype.moveUpLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle + 45, -val, this.head.body.velocity);
+    this.head.body.moveUp(val * 0.66);
+    this.head.body.moveLeft(val * 0.66);
+    //game.physics.arcade.velocityFromAngle(this.head.angle + 45, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveDownLeft = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 45, -val, this.head.body.velocity);
+    this.head.body.moveDown(val * 0.66);
+    this.head.body.moveLeft(val * 0.66);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 45, -val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveUpRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 45, val, this.head.body.velocity);
+    this.head.body.moveUp(val * 0.66);
+    this.head.body.moveRight(val * 0.66);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 45, val, this.head.body.velocity);
     this.moving = true;
 }
 BAWL.Player.prototype.moveDownRight = function(val) {
-    game.physics.arcade.velocityFromAngle(this.head.angle - 135, -val, this.head.body.velocity);
+    this.head.body.moveDown(val * 0.66);
+    this.head.body.moveRight(val * 0.66);
+    //game.physics.arcade.velocityFromAngle(this.head.angle - 135, -val, this.head.body.velocity);
     this.moving = true;
 }
 
@@ -162,7 +174,7 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
     this.head = this.parts.create(x, y, assetName + '_head');
     this.head.anchor.setTo(0.5); 
     this.head.offset = new Phaser.Point(0, 0);
-    game.physics.arcade.enable(this.head);
+    game.physics.p2.enable(this.head);
 
     
     this.parts.that = this;
@@ -172,7 +184,7 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
         if (part.offset.rotation == null) {
             part.offset.rotation = 0;
         }
-        game.physics.arcade.enable(part);
+        game.physics.p2.enable(part);
     });
     
         

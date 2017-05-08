@@ -2,6 +2,7 @@
 //it organizes animations into steps instead of paths for easier editing
 BAWL.Movement = function(parent, name) {
     this.parent = parent;
+    this.char = parent;
     this.name = name;
     this.steps = [];
     this.curStep = null;
@@ -22,6 +23,9 @@ BAWL.Movement.prototype.start = function() {
     this.elapsed = 0;
     this.curStep = this.steps[this.step];
     this.nextStep = this.steps[this.step + 1]; //WARNING: check if steps[step + 1] exists
+    if (this.steps[this.step].action!= null) {
+        this.parent.doCast(this.steps[this.step].action);
+    }
 }
 
 
@@ -69,6 +73,10 @@ BAWL.Movement.prototype.endStep = function() {
         }
     } else {
         this.nextStep = this.steps[this.step + 1];
+        if (this.steps[this.step].action!= null) {
+            console.log(this.parent);
+            this.parent.doCast(this.steps[this.step].action);
+        }
     }
 }
 

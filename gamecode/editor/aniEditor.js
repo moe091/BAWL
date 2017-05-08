@@ -29,7 +29,6 @@ unpause: function() {
     } else {
         console.log("unpausing - NO MOVEMENT");
     }
-    console.log($("#inputRad").val());
     this.paused = false;
     game.input.enabled = true;
     this.aniEditor.style.backgroundColor = "#000000";
@@ -50,8 +49,6 @@ populateChars: function(charList) {
     
 populateMovements: function() {
     $("#movementDropdown").html("");
-    console.log("POPULATE MOVEMENTS---");
-    console.log(this.char.movements);
     for (i in this.char.movements) {
         $("#movementDropdown").append('<option value='+i+'>'+ this.char.movements[i].name +'</option>');
     }
@@ -124,7 +121,6 @@ setSpriteOffset(pos) {
     pos.sprite.offset.x = pos.x;
     pos.sprite.offset.y = pos.y;
     pos.sprite.offset.rotation = pos.rotation;
-    console.log("---------------setSpriteOffset - REMOVING THIS-----------------------------");
 },
     
 createStepEditor() {
@@ -134,7 +130,7 @@ createStepEditor() {
     var ps;
     var degrees;
     
-    sEditor.append("<input type='radio' name='spriteRad' value=-1 id='inputRad'> None");
+    sEditor.append("<input type='radio' name='spriteRad' value=-1 id='inputRad' onclick='AnimationEditor.sRadClick(-1)'> None");
     for (var i in this.movement.sprites) {
         ps = this.movement.sprites[i];
         sEditor.append("<div id='coordEdit-" + i + "' " +  "class='editVal'>");//editVal div
@@ -154,7 +150,7 @@ createStepEditor() {
                 $(".r.valSpan-" + i).append("<input type='number' id='rotVal-" + i + "' class='pVal editInputLN'>");
             $("#coordEdit-" + i).append("</span>");//close  value span Rot
         
-            $("#coordEdit-" + i).append("<span class='spriteRadSpan radSpan-" + i + "'>");
+            $("#coordEdit-" + i).append("<span class='spriteRadSpan radSpan-" + i + "' onclick='AnimationEditor.sRadClick(" + i + ")'" + ">");
                 $(".radSpan-" + i).append("<input type='radio' name='spriteRad' value=" + i + ">" + ps.name);
             $("#coordEdit-" + i).append("</span>");
         sEditor.append("</div>");
@@ -172,12 +168,9 @@ updateVals: function() {
         $("#rotVal-" + i).val(Math.round(posi.rotation * (180 / Math.PI)));
         $("#durVal-" + i).val(posi.duration);
     }
-    console.log("update vals:");
-    console.log(this.tStep);
 },
   
 updatePosition: function() {
-    console.log(this.tStep);
     for (i in this.tStep.positions) {
         this.tStep.positions[i].x = Number($("#xVal-" + i).val());
         this.tStep.positions[i].y = Number($("#yVal-" + i).val());
@@ -219,8 +212,6 @@ newStep: function() {
         newStep.positions[i].rotation = 0;
         newStep.positions[i].sprite = this.movement.sprites[i];
     }
-    console.log("newStep() - " );
-    console.log(newStep);
     this.movement.steps.push(newStep);
     this.populateTimeSteps();
 },
@@ -232,7 +223,6 @@ addSprite: function() {
     $("#addSpriteOpt option[value='" + i + "']").remove();
     this.movement.sprites[i] = this.char.parts.children[i];
     this.movement.addSprite(this.char.parts.children[i]);
-    console.log(this.movement.sprites);
     this.createStepEditor();
     this.updateVals();
 },
@@ -266,7 +256,6 @@ closeSpriteDialog: function() {
 copyPositions: function() {
     
     $(".cPosOpt").css("display", "none");
-    console.log($(".cPosOpt"));
 },
 
 copyPosMenu: function() {
@@ -319,6 +308,109 @@ copyPosClick: function() {
     }
     
     this.updateVals();
+},
+    
+sRadClick: function(n) {
+    if (n != -1) {
+        this.selectedSprite = this.movement.sprites[n];
+        this.spriteIndex = n;
+    } else {
+        this.selectedSprite = null;
+        this.spriteIndex = n;
+    }
+},
+    
+    
+    
+    
+    
+    
+    
+//_____________________________________________UPDATE_____________________________________________\\
+uDown: 0,
+rDown: 0,
+dDown: 0,
+lDown: 0,
+moveVal: 1,
+update: function() {
+    if (this.wasd.f.isDown) {
+        this.moveVal = 3;
+        console.log("FFFFFFFFFFFFFFFFFFFFFFFFF");
+    } else {
+        this.moveVal = 1;
+    }
+    if (this.wasd.up.isDown) {
+        //ADD OPTION IN AniEditor UI TO SELECT BODY PART.
+        //MOVE THE SELECTED BODY PART UP
+        //IF SHIFT IS HELD, MOVE IT IN INCREMENTS OF 5
+        //IF ALT IS HELD, ROTATE INSTEAD
+        //IF CTROL IS HELD, ROTATE BACKWARDS 
+        console.log("UP");
+        if (this.uDown == 0) {
+            if (this.spriteIndex != -1 && this.tStep != null) {
+                this.tStep.positions[this.spriteIndex].y-= this.moveVal;
+                this.updateVals();
+                this.movement.setStep(this.char, this.tStep);
+                console.log("MOVE SPRITE UP - " + this.moveVal);
+            }
+            this.uDown = game.time.now;
+        }
+        console.log("dif: " + (game.time.now - this.tDown));
+        if (game.time.now - this.uDown > 100) {
+            this.uDown = 0;
+        }
+    } else { this.uDown = 0; }
+    
+    if (this.wasd.right.isDown) {
+        if (this.rDown == 0) {
+            if (this.spriteIndex != -1 && this.tStep != null) {
+                this.tStep.positions[this.spriteIndex].x+= this.moveVal;
+                this.updateVals();
+                this.movement.setStep(this.char, this.tStep);
+            }
+            this.rDown = game.time.now;
+        }
+        if (game.time.now - this.rDown > 100) {
+            this.rDown = 0;
+        }
+    } else { this.rDown = 0; }
+    
+    if (this.wasd.down.isDown) {
+        if (this.dDown == 0) {
+            if (this.spriteIndex != -1 && this.tStep != null) {
+                this.tStep.positions[this.spriteIndex].y+= this.moveVal;
+                this.updateVals();
+                this.movement.setStep(this.char, this.tStep);
+            }
+            this.dDown = game.time.now;
+        }
+        if (game.time.now - this.dDown > 100) {
+            this.dDown = 0;
+        }
+    } else { this.dDown = 0; }
+    
+    if (this.wasd.left.isDown) {
+        if (this.lDown == 0) {
+            if (this.spriteIndex != -1 && this.tStep != null) {
+                this.tStep.positions[this.spriteIndex].x-= this.moveVal;
+                this.updateVals();
+                this.movement.setStep(this.char, this.tStep);
+            }
+            this.lDown = game.time.now;
+        }
+        if (game.time.now - this.lDown > 100) {
+            this.lDown = 0;
+        }
+    } else { this.lDown = 0; }
+},
+createWASD: function() {
+    this.wasd = {
+        up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+        f: game.input.keyboard.addKey(Phaser.Keyboard.F),
+    };
 }
 
 

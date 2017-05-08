@@ -13,14 +13,15 @@ BAWL.Player = function(assetName, x, y) {
     
     this.name = "Player";
     BAWL.loader.loadAnimation("player", "newRun", this.loadAnimation, this);
-    BAWL.loader.loadAnimation("player", "punch2", this.loadAnimation, this);
-    BAWL.loader.loadAnimation("player", "spinAtk", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "punch1", this.loadAnimation, this);
+    BAWL.loader.loadAnimation("player", "whirlwind", this.loadAnimation, this);
     this.curMovement = this.movements[0];
 }
 
 BAWL.Player.prototype.doAnimation = function(n) {
     this.lastMovement = this.curMovement;
     this.curMovement = this.movements[n];
+    console.log(this.curMovement);
     this.curMovement.start();
     this.punching = true; //TEMP - for testing
 }
@@ -45,7 +46,6 @@ BAWL.Player.prototype.update = function() {
         }
         this.curMovement.update();
         
-        console.log("END UPDATE - PLAYER");
     }
     
    
@@ -53,8 +53,6 @@ BAWL.Player.prototype.update = function() {
 
 BAWL.Player.prototype.changePos = function(tStep) {
     if (false) {
-        console.log("player changePos():");
-        console.log(tStep);
         for (var j = 0; j < tStep.positions.length; j++) {
             tStep.positions[j].sprite.offset.x = tStep.positions[j].x;
             tStep.positions[j].sprite.offset.y = tStep.positions[j].y;
@@ -225,7 +223,6 @@ BAWL.Player.prototype.createBodyParts = function(assetName, x, y) {
 //TODO: create an editor that either exports JSON or generates code to setup animations
 BAWL.Player.prototype.loadAnimation = function(save, that, name) {
     save.name = name;
-    console.log("NAME: " + save.name);
     var movement = new BAWL.Movement(that, save.name);
     for (var i in save.sprites) {
         movement.sprites[Number(that.getSpriteByName(save.sprites[i]).index)] = that.getSpriteByName(save.sprites[i]);
@@ -239,16 +236,11 @@ BAWL.Player.prototype.loadAnimation = function(save, that, name) {
         
         for (var j in save.steps[i].positions) {
             if (save.steps[i].positions[j] == null) {
-                console.log("NULL");
                 save.steps[i].positions[j] = {};
-                console.log("i+1 = " + (i + 1));
-                console.log(save.steps[3]);
-                console.log(save.steps[i+1]);
                 save.steps[i].positions[j].x = (save.steps[i+1].positions[j].x + save.steps[i-1].positions[j].x) / 2;
                 save.steps[i].positions[j].y = (save.steps[i+1].positions[j].y + save.steps[i-1].positions[j].y) / 2;
                 save.steps[i].positions[j].rotation = (save.steps[i+1].positions[j].rotation + save.steps[i-1].positions[j].rotation) / 2;
                 save.steps[i].positions[j].spriteName = save.steps[i+1].positions[j].spriteName;
-                console.log(save.steps[i].positions[j]);
             }
             
             step.positions[j] = new Phaser.Point(save.steps[i].positions[j].x, save.steps[i].positions[j].y);
@@ -258,15 +250,13 @@ BAWL.Player.prototype.loadAnimation = function(save, that, name) {
         
         movement.steps.push(step);
     }
-    console.log("loaded movement. sprites:");
-    console.log(movement);
-    console.log(movement.sprites);
     that.movements[that.movements.length] = movement;
     that.curMovement = that.movements[0];
     that.curMovement.start();
     
-    if (that.movements.length >= 2) {
+    if (that.movements.length >= 3) {
         that.movements[1].repeat = false;
+        that.movements[2].repeat = false;
     }
     
     /**
@@ -301,7 +291,6 @@ BAWL.Player.prototype.getSpriteByName = function(n) {
             return this.parts.children[p];
         }
     }
-    console.log("sprite " + n + " not found! returning null");
     return null;
 },
     

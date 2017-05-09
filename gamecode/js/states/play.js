@@ -13,6 +13,7 @@ BAWL.play = {
         AnimationEditor.createWASD(); //NOTE - EDITOR CODE
         
         this.player = new BAWL.Player('char1', 1500, 1800);
+        this.ogre = new BAWL.Enemy('ogre1', 1400, 900);
         BAWL.gameWorld.addChar(this.player);
         game.camera.follow(this.player.head);
         

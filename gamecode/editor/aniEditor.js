@@ -176,6 +176,7 @@ updatePosition: function() {
         this.tStep.positions[i].y = Number($("#yVal-" + i).val());
         this.tStep.positions[i].rotation = Number(($("#rotVal-" + i).val() / 180) * Math.PI);
     }
+    console.log("UPDATE POSITION");
     this.movement.setStep(this.char, this.tStep);
     
 },
@@ -355,7 +356,7 @@ update: function() {
             }
             this.uDown = game.time.now;
         }
-        console.log("dif: " + (game.time.now - this.tDown));
+        console.log("dif: " + (game.time.now - this.uDown));
         if (game.time.now - this.uDown > 100) {
             this.uDown = 0;
         }

@@ -24,7 +24,7 @@ BAWL.Movement.prototype.start = function() {
     this.curStep = this.steps[this.step];
     this.nextStep = this.steps[this.step + 1]; //WARNING: check if steps[step + 1] exists
     if (this.steps[this.step].action!= null) {
-        this.parent.doCast(this.steps[this.step].action);
+        this.parent.doCast(this.steps[this.step].action, this.step);
     }
 }
 
@@ -75,7 +75,7 @@ BAWL.Movement.prototype.endStep = function() {
         this.nextStep = this.steps[this.step + 1];
         if (this.steps[this.step].action!= null) {
             console.log(this.parent);
-            this.parent.doCast(this.steps[this.step].action);
+            this.parent.doCast(this.steps[this.step].action, this.step);
         }
     }
 }

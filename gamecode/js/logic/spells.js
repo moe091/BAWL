@@ -21,5 +21,17 @@ BAWL.spells = {
         }, this);
         
         spell.animations.play("cast", 20, false);
+    },
+    
+    lunge: function(player, step) {
+        if (step == 0) {
+            player.castUpdate = function() {
+                this.head.body.velocity.y = Math.sin(this.head.rotation - (Math.PI / 2)) * 1200;
+                this.head.body.velocity.x = Math.cos(this.head.rotation - (Math.PI / 2)) * 1200;
+                
+            }
+        } else if (step == 2) {
+            player.castUpdate = null;
+        }
     }
 }

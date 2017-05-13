@@ -22,6 +22,7 @@ BAWL.play = {
     },
     
     update: function() {
+        this.ogre.update();
         this.player.setZeroVelocity();
         
         if (!AnimationEditor.paused) {
